@@ -87,6 +87,13 @@ func TestTxExec(t *testing.T) {
 	tx.Commit()
 }
 
+func TestQueryRow(t *testing.T){
+	var age int64
+	row := db.QueryRow("SELECT age FROM users WHERE name = ?", "alber")
+	err := row.Scan(&age)
+	checkErr(err)
+}
+
 
 func checkErr(err error) {
 	if err != nil {
