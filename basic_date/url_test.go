@@ -59,7 +59,5 @@ func index(str string, c byte) int {
 }
 
 func TestTest(t *testing.T) {
-	var s string
-	s="'aaaa"
-	fmt.Println(s=="")
+	fmt.Println(20.01/100)
 }

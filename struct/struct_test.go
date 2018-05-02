@@ -1,20 +1,20 @@
 package _struct
 
-import "fmt"
+import (
+	"testing"
+	"fmt"
+)
 
 type S struct {
 	A int
+	B int
 }
 
-type B struct {
-	*S
-	A int
-}
-
-func (b B)f(a int){
-	fmt.Println(b.S.A)
-}
-
-func do(f func(int)){
-
+func TestS(t *testing.T){
+	s:=&S{
+		A:1,
+		B:2,
+	}
+	str:=fmt.Sprintf("%+v\n",*s)
+	fmt.Println(str)
 }
