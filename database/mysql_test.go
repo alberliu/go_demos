@@ -21,7 +21,10 @@ type User struct {
 }
 
 func TestExec(t *testing.T) {
-	stmt, err := db.Prepare("insert into user(number,name,ege,sex) values(?,?,?,?)")
+	db.Exec("sql")
+
+	stmt, err := db.Prepare(`
+		insert into user(number,name,ege,sex) values(?,?,?,?)`)
 	checkErr(err)
 	res, err := stmt.Exec("18829291353", "alber", 20, 1)
 	checkErr(err)
@@ -44,10 +47,7 @@ func TestQuery(t *testing.T) {
 		col,err:=rows.Columns()
 		checkErr(err)
 		fmt.Println(col)
-
 	}
-
-
 }
 
 func TestTx(t *testing.T) {

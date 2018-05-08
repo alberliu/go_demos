@@ -72,10 +72,10 @@ func TestInt(t *testing.T) {
 }
 
 func TestData(t *testing.T) {
-	a,b:=1,2
-	fmt.Println(a,&b)
-	c,b:=4,3
-	fmt.Println(a,&b,c)
+	slice:=make([]int,5)
+	for i:=range slice{
+		fmt.Println(i)
+	}
 }
 
 func TestLog(t *testing.T) {
@@ -88,3 +88,5 @@ func main() {
 	log.SetFlags(log.Lshortfile | log.LstdFlags)
 	log.Println("hello","world")
 }
+
+
