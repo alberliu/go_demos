@@ -23,8 +23,7 @@ type User struct {
 func TestExec(t *testing.T) {
 	db.Exec("sql")
 
-	stmt, err := db.Prepare(`
-		insert into user(number,name,ege,sex) values(?,?,?,?)`)
+	stmt, err := db.Prepare(`insert into user(number,name,ege,sex) values(?,?,?,?)`)
 	checkErr(err)
 	res, err := stmt.Exec("18829291353", "alber", 20, 1)
 	checkErr(err)

@@ -8,15 +8,21 @@ import (
 )
 
 type User struct {
-	Id     int64 `gorm:"primary_key"`
-	Number string
+	Id     int64  `gorm:"primary_key"`
+	Number string `gorm:"default":'alber'`
 	Name   string
 	Ege    int
 	Sex    int
+	Books  []Book `gorm:"ForeignKey:user_id;AssociationForeignKey:Refer"`
+}
+
+type Book struct {
+	Id   int64 `gorm:"primary_key"`
+	Name string
 }
 
 func initDB() *gorm.DB {
-	db, err := gorm.Open("mysql", "yaoshitong:12345678@tcp(192.168.40.12:3306)/yaoshitong?charset=utf8")
+	db, err := gorm.Open("mysql", "root:Liu123456@tcp(localhost:3306)/test?charset=utf8")
 	if err != nil {
 		panic("failed to connect database")
 	}
@@ -27,8 +33,27 @@ func initDB() *gorm.DB {
 
 func TestInsert(t *testing.T) {
 	db := initDB()
-	user := User{Id: 4, Number: "1", Name: "1", Ege: 1, Sex: 1}
+	user := User{Id: 0, Number: "", Name: "1", Ege: 1, Sex: 1}
 	db = db.Create(&user)
+	fmt.Println(db.Error)
+	fmt.Printf("%+v\n",user)
+	fmt.Println(db.RowsAffected)
+
+
+}
+
+func TestInsertOneToMany(t *testing.T) {
+	db := initDB()
+	user := User{Id: 0, Number: "1", Name: "1", Ege: 0, Sex: 1}
+
+	books := make([]Book, 3)
+	books[0] = Book{Name: "1"}
+	books[1] = Book{Name: "2"}
+	books[2] = Book{Name: "3"}
+
+	user.Books = books
+	db = db.Set("gorm:save_associations", true).Create(&user)
+	//db = db.Create(&user)
 	fmt.Println(db.Error)
 	fmt.Println("hello world")
 	fmt.Println(db.RowsAffected)
@@ -38,34 +63,37 @@ func TestInsert(t *testing.T) {
 func TestGet(t *testing.T) {
 	db := initDB()
 	user := User{}
-	db.First(&user, 31)
-	fmt.Printf("%+v", user)
+	err:=db.First(&user, 10).Error
+	if err!=nil{
+		fmt.Println("err")
+		fmt.Println(err)
+		return
+	}
+	fmt.Printf("%+v\n", user)
 }
 
-func TestRows(t *testing.T){
+func TestRows(t *testing.T) {
 	db := initDB()
-	rows,err:=db.Raw("SELECT id FROM pharmacist_goods WHERE id = ?",10000).Rows()
-	if err!=nil{
+	rows, err := db.Raw("SELECT id FROM pharmacist_goods WHERE id = ?", 10000).Rows()
+	if err != nil {
 		fmt.Println(err)
 	}
 
 	fmt.Println(rows.Columns())
 
-	for rows.Next(){
+	for rows.Next() {
 		var id int
 		rows.Scan(&id)
-		fmt.Println("id:",id)
+		fmt.Println("id:", id)
 	}
 }
 
-func TestRow(t *testing.T){
+func TestRow(t *testing.T) {
 	db := initDB()
 	var id int
-	err:=db.Raw("SELECT id FROM pharmacist_goods WHERE id = ?",1).Row().Scan(&id)
-	if err!=nil{
+	err := db.Raw("SELECT id FROM pharmacist_goods WHERE id = ?", 1).Row().Scan(&id)
+	if err != nil {
 		fmt.Println(err)
 	}
-
-
 
 }

@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"testing"
 	"reflect"
-	"github.com/json-iterator/go"
+	"encoding/json"
 )
 
 func hello(a int) {
@@ -26,10 +26,16 @@ type S struct {
 	B int
 }
 
+func (s S)f1(){
+	s.f2()
+}
+
+func (s S)f2(){
+
+}
+
 //json-iterator测试
 func TestEnJson(t *testing.T) {
-	var json = jsoniter.ConfigCompatibleWithStandardLibrary
-
 	var s = S{1, 2}
 	str, _ := json.Marshal(&s)
 	fmt.Println(string(str))

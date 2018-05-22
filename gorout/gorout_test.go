@@ -23,12 +23,11 @@ func Test_Id(t *testing.T) {
 	fmt.Println("main", GoID())
 	var wg sync.WaitGroup
 	for i := 0; i < 10; i++ {
-		i := i
 		wg.Add(1)
-		go func() {
+		go func(i int) {
 			defer wg.Done()
 			fmt.Println(i, GoID())
-		}()
+		}(i)
 	}
 	wg.Wait()
 }

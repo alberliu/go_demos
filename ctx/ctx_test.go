@@ -7,13 +7,6 @@ import (
 	"time"
 )
 
-func run() {
-	for {
-		time.Sleep(1 * time.Second)
-		fmt.Println("run")
-	}
-}
-
 func f(ctx context.Context, str string) {
 	for {
 		select {
@@ -54,15 +47,8 @@ func CtxUse() {
 		fmt.Println("ok")
 	case <-ctx.Done():
 		fmt.Println("timeout")
-		panic("error")
 		return
 	}
-}
-
-func TestCtxU(t *testing.T) {
-	defer recover()
-	go CtxUse()
-	select {}
 }
 
 func do(ctx context.Context) {
@@ -72,17 +58,7 @@ func do(ctx context.Context) {
 	}
 }
 
-func r() {
-	go run()
-	return
-}
-
-func TestGoroutine(t *testing.T) {
-	go r()
+func TestCtx2(t *testing.T) {
+	go CtxUse()
 	select {}
-}
-
-func BenchmarkB(b *testing.B) {
-	time.Sleep(1 * time.Second)
-	fmt.Println("test")
 }
