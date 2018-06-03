@@ -1,4 +1,4 @@
-package reflecttion
+package reflect
 
 import (
 	"testing"

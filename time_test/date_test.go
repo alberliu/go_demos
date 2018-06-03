@@ -1,4 +1,4 @@
-package datetime
+package time_test
 
 import (
 	"testing"

@@ -1,4 +1,4 @@
-package prof
+package pprof
 
 import (
 	"testing"

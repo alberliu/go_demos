@@ -6,6 +6,7 @@ import (
 	"strings"
 	"reflect"
 	"log"
+	"math/rand"
 )
 
 var (
@@ -13,12 +14,8 @@ var (
 )
 
 func TestSlice(t *testing.T) {
-	//var m map[int]int
-
-	//var a []ints:=new(S)
-	//fmt.Println(a==nil)
-
-	fmt.Println(s)
+	s:=[]int{0,1,2,3,4,5}
+	fmt.Println(s[0:2])
 }
 
 func TestString1(t *testing.T) {
@@ -87,6 +84,14 @@ func TestLog(t *testing.T) {
 func main() {
 	log.SetFlags(log.Lshortfile | log.LstdFlags)
 	log.Println("hello","world")
+}
+
+func TestRandom(t *testing.T){
+	//s := rand.NewSource(42)
+	//r := rand.New(s)
+	for i:=0;i<10;i++{
+		fmt.Println(rand.Intn(100))
+	}
 }
 
 

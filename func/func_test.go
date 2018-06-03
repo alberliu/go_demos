@@ -1,4 +1,4 @@
-package _func
+package func_test
 
 import (
 	"fmt"

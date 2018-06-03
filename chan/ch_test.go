@@ -1,4 +1,4 @@
-package ch
+package chan_test
 
 import (
 	"testing"
