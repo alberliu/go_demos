@@ -15,9 +15,9 @@ func TestWrite(t *testing.T) {
 }
 
 func write(fileName string) {
-	outputFile, outputError := os.OpenFile("data", os.O_WRONLY|os.O_CREATE, 0666)
-	if outputError != nil {
-		fmt.Printf("An error occurred with file opening or creation\n")
+	outputFile, err := os.OpenFile("data", os.O_WRONLY|os.O_CREATE, 0666)
+	if err != nil {
+		fmt.Println(err)
 		return
 	}
 	outputWriter := bufio.NewWriter(outputFile)

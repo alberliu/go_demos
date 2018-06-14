@@ -26,11 +26,11 @@ type S struct {
 	B int
 }
 
-func (s S)f1(){
+func (s S) f1() {
 	s.f2()
 }
 
-func (s S)f2(){
+func (s S) f2() {
 
 }
 
@@ -39,4 +39,11 @@ func TestEnJson(t *testing.T) {
 	var s = S{1, 2}
 	str, _ := json.Marshal(&s)
 	fmt.Println(string(str))
+}
+
+func f() (int, int) {
+	return 0, 0
+}
+
+func TestReturn(t *testing.T) {
 }

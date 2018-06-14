@@ -1,16 +1,15 @@
 package main
 
-import (
-	"log"
-)
+import "github.com/astaxie/beego/logs"
 
 func main() {
-	log.SetFlags(log.Lshortfile | log.LstdFlags)
-	log.Println("hello","world")
-	f()
-}
+	logs.SetLogger(logs.AdapterFile, `{"filename":"log.log","level":6}`)
+	logs.EnableFuncCallDepth(true)
+	logs.SetLogFuncCallDepth(3)
 
-func f(){
-	log.Println("hello","world")
+	logs.Trace("hello")
+	logs.Debug("hello")
+	logs.Info("hello")
+	logs.Warn("hello")
+	logs.Error("hello")
 }
-

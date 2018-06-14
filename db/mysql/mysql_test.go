@@ -1,4 +1,4 @@
-package database
+package mysql
 
 import (
 	_ "github.com/go-sql-driver/mysql"
@@ -10,7 +10,12 @@ import (
 var db *sql.DB
 
 func init() {
-	db, _ = sql.Open("mysql", "smartwatch:smartwatch_secret@tcp(106.75.177.192:13331)/test?charset=utf8")
+	var err error
+	db, err = sql.Open("mysql", "root:Liu123456@tcp(localhost:3306)/test?charset=utf8")
+	if err != nil {
+		fmt.Println(err)
+		panic(err)
+	}
 }
 
 type User struct {
@@ -21,7 +26,7 @@ type User struct {
 }
 
 func TestExec(t *testing.T) {
-	db.Exec("sql")
+	db.Exec("sql", 1, 2)
 
 	stmt, err := db.Prepare(`insert into user(number,name,ege,sex) values(?,?,?,?)`)
 	checkErr(err)
@@ -35,47 +40,48 @@ func TestExec(t *testing.T) {
 func TestQuery(t *testing.T) {
 	stmt, err := db.Prepare("select number,name,ege,sex from user")
 	checkErr(err)
-	rows,err:=stmt.Query()
+	rows, err := stmt.Query()
 	checkErr(err)
 	for rows.Next() {
-		user:=User{}
-		err = rows.Scan(&user.number, &user.name, &user.ege,&user.sex)
+		user := User{}
+		err = rows.Scan(&user.number, &user.name, &user.ege, &user.sex)
 		checkErr(err)
 		fmt.Println(user)
 		//rows.s
-		col,err:=rows.Columns()
+		col, err := rows.Columns()
 		checkErr(err)
 		fmt.Println(col)
 	}
 }
 
 func TestTx(t *testing.T) {
-	sql:=`select
+	sql := `select
 			number,
 			name,
 			ege,
 			sex
 		  from
 		  	user`
-	tx,err:=db.Begin()
+	tx, err := db.Begin()
 	stmt, err := tx.Prepare(sql)
 	checkErr(err)
-	rows,err:=stmt.Query()
+	rows, err := stmt.Query()
 	checkErr(err)
-	users:=make([]User,0,5)
+	users := make([]User, 0, 5)
 	for rows.Next() {
-		user:=User{}
-		err = rows.Scan(&user.number, &user.name, &user.ege,&user.sex)
+		user := User{}
+		err = rows.Scan(&user.number, &user.name, &user.ege, &user.sex)
 		checkErr(err)
-		fmt.Printf("%#v\n",user)
-		users=append(users,user)
+		fmt.Printf("%#v\n", user)
+		users = append(users, user)
 	}
 	fmt.Println(users)
 	tx.Commit()
+	tx.Rollback()
 }
 
 func TestTxExec(t *testing.T) {
-	tx,err:=db.Begin()
+	tx, err := db.Begin()
 	stmt, err := tx.Prepare("insert into user(number,name,ege,sex) values(?,?,?,?)")
 	checkErr(err)
 	res, err := stmt.Exec("18829291354", "alber", 20, 1)
@@ -86,17 +92,15 @@ func TestTxExec(t *testing.T) {
 	tx.Commit()
 }
 
-func TestQueryRow(t *testing.T){
+func TestQueryRow(t *testing.T) {
 	var age int64
 	row := db.QueryRow("SELECT age FROM users WHERE name = ?", "alber")
 	err := row.Scan(&age)
 	checkErr(err)
 }
 
-
 func checkErr(err error) {
 	if err != nil {
 		fmt.Println(err)
 	}
 }
-
