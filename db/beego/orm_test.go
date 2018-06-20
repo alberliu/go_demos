@@ -84,3 +84,36 @@ func TestList(t *testing.T) {
 	}
 	fmt.Printf("%+v\n", user)
 }
+
+func TestSqlBuild(t *testing.T){
+	b, _ := orm.NewQueryBuilder("mysql")
+	b.Select("*").
+		From("user")
+	o := orm.NewOrm()
+	fmt.Println(b.String())
+	var users []User
+	_,err:=o.Raw(b.String(), ).QueryRows(&users)
+	if err!=nil{
+		fmt.Println(err)
+	}
+	printfln(users)
+}
+
+func TestSqlBuildCount(t *testing.T){
+	b, _ := orm.NewQueryBuilder("mysql")
+	b.Select("count(*)").
+		From("user")
+	o := orm.NewOrm()
+	var count int
+	err:=o.Raw(b.String() ).QueryRow(&count)
+	if err!=nil{
+		fmt.Println(err)
+	}
+	fmt.Println(count)
+}
+
+func printfln(users []User){
+	for _,user:=range users{
+		fmt.Printf("%+v\n",user)
+	}
+}
