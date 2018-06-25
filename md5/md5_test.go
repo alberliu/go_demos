@@ -3,11 +3,11 @@ package md5
 import (
 	"testing"
 	"fmt"
-	"giftone/gift-audit/library"
+	"giftone/ico-audit/library"
 )
 
 func TestMd5(t *testing.T) {
-	md5:=library.Md5([]byte("123456"))
+	md5:=library.Md5("111111")
 	fmt.Println(len(md5))
 	fmt.Println(md5)
 
@@ -15,9 +15,7 @@ func TestMd5(t *testing.T) {
 }
 
 func TestToken(t *testing.T) {
-	md5:=library.Md5([]byte("111111"+"gift"))
+	md5:=library.Md5("18829291351"+"96e79218965eb72c92a549dd5a330112")// 96e79218965eb72c92a549dd5a330112
 	fmt.Println(len(md5))
 	fmt.Println(md5)
-
-
 }

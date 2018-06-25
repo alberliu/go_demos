@@ -11,6 +11,7 @@ func TestPanic(t *testing.T){
 		if p := recover(); p != nil {
 			err := fmt.Errorf("internal error: %v", p)
 			fmt.Println(err)
+			return
 		}
 	}()
 

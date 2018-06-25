@@ -15,12 +15,12 @@ func TestWrite(t *testing.T) {
 }
 
 func write(fileName string) {
-	outputFile, err := os.OpenFile("data", os.O_WRONLY|os.O_CREATE, 0666)
+	file, err := os.OpenFile("data", os.O_WRONLY|os.O_CREATE, 0666)
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
-	outputWriter := bufio.NewWriter(outputFile)
+	outputWriter := bufio.NewWriter(file)
 	outputString := "hello world!"
 
 	for i := 0; i <= 30; i++ {
@@ -28,7 +28,7 @@ func write(fileName string) {
 		time.Sleep(1 * time.Second)
 		outputWriter.Flush()
 	}
-	outputFile.Close()
+	file.Close()
 }
 
 func TestRead(t *testing.T) {
