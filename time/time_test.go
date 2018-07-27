@@ -70,3 +70,21 @@ func TestParse(t *testing.T) {
 	fmt.Println(time)
 }
 
+func TestPrint(t *testing.T) {
+	var time time.Time
+	fmt.Println(time)
+}
+
+func TestGetInt(t *testing.T) {
+	now:=time.Now()
+	fmt.Println(now.Unix())
+
+	fmt.Println(now.Unix())
+	fmt.Println(now.UnixNano())
+
+	fmt.Println(time.Unix(now.Unix(),now.UnixNano()))
+}
+
+func TestGetd(t *testing.T) {
+	fmt.Println(time.Now().Sub(time.Now()))
+}

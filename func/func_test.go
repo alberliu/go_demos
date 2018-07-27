@@ -47,3 +47,17 @@ func f() (int, int) {
 
 func TestReturn(t *testing.T) {
 }
+
+
+func f1(){
+	fmt.Println("f1")
+}
+
+func f2(f func()){
+	f()
+}
+
+func TestF(t *testing.T) {
+	f2(f1)
+}
+

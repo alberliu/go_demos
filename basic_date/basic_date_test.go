@@ -7,6 +7,9 @@ import (
 	"reflect"
 	"log"
 	"math/rand"
+	"unsafe"
+	"encoding/binary"
+	"strconv"
 )
 
 var (
@@ -95,3 +98,37 @@ func TestRandom(t *testing.T){
 }
 
 
+func TestFloatToString(t *testing.T) {
+	var a float64=3.1415926
+	s:=fmt.Sprint(a)
+	fmt.Println(s)
+}
+
+
+func TestLen(t *testing.T) {
+	var a  int
+	fmt.Println(unsafe.Sizeof(a))
+}
+
+func TestPutData(t *testing.T) {
+	buf:=make([]byte,2)
+	binary.BigEndian.PutUint16(buf,2)
+	fmt.Println(buf)
+	a:=binary.BigEndian.Uint64(buf)
+	fmt.Println(a)
+}
+
+func TestDouble(t *testing.T) {
+	fmt.Println(strconv.ParseFloat("", 64))
+}
+
+func TestString(t *testing.T) {
+	var a int64=1000
+	s:=fmt.Sprintf("hell %s %d","world",a)
+	fmt.Println(s)
+}
+
+
+func TestStringSplit(t *testing.T) {
+	fmt.Println(len(strings.Split("","|")))
+}

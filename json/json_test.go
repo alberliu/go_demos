@@ -36,14 +36,12 @@ func TestDeJson(t *testing.T) {
 func TestSlice(t *testing.T){
 	var json = jsoniter.ConfigCompatibleWithStandardLibrary
 
-	var s = make([]S,5)
-	s[0]=S{1,2}
-	ss:="hello"
-	str, _ := json.Marshal(ss)
+	var s = []int{0,1,2,3,4,5}
+	str, _ := json.Marshal(s)
 	fmt.Println(string(str))
 
-	var s1 string
-	error:=json.Unmarshal(str, &s1)
+	var s1 []int
+	error:=json.Unmarshal(str, s1)
 	if error!=nil{
 		fmt.Println(error)
 	}

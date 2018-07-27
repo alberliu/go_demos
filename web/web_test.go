@@ -4,6 +4,7 @@ import (
 	"testing"
 	"net/http"
 	"time"
+	"fmt"
 )
 
 func TestWeb(t *testing.T) {
@@ -11,16 +12,9 @@ func TestWeb(t *testing.T) {
 }
 
 func hello(w http.ResponseWriter, r *http.Request) {
-	//获取body
-	//bytes:=make([]byte,r.ContentLength)
-	//r.Body.Read(bytes)
-	//fmt.Println(string(bytes))
-
-	/*a:=r.Form["id"]
-	for v :=range a{
-		fmt.Println(v)
-	}*/
-
+	bytes:=make([]byte,r.ContentLength)
+	r.Body.Read(bytes)
+	fmt.Println(string(bytes))
 }
 
 func test() {

@@ -7,7 +7,7 @@ import (
 	"fmt"
 )
 
-type User2 struct {
+type User struct {
 	Id     int64  `gorm:"primary_key"`
 	Number string `gorm:"default":'alber'`
 	Name   string
@@ -33,18 +33,18 @@ func initGORMDB() *gorm.DB {
 
 func TestInsert(t *testing.T) {
 	db := initGORMDB()
-	user := User2{Id: 0, Number: "", Name: "1", Ege: 1, Sex: 1}
-	db = db.Create(&user)
+	user1 := User{Id: 108, Number: "", Name: "1", Ege: 1, Sex: 1}
+	db = db.Create(&user1)
+
+	user2 := User{Id: 109, Number: "", Name: "1", Ege: 1, Sex: 1}
+	db = db.Create(&user2)
 	fmt.Println(db.Error)
-	fmt.Printf("%+v\n",user)
 	fmt.Println(db.RowsAffected)
-
-
 }
 
 func TestInsertOneToMany(t *testing.T) {
 	db := initGORMDB()
-	user := User2{Id: 0, Number: "1", Name: "1", Ege: 0, Sex: 1}
+	user := User{Id: 0, Number: "1", Name: "1", Ege: 0, Sex: 1}
 
 	books := make([]Book, 3)
 	books[0] = Book{Name: "1"}

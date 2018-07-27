@@ -5,7 +5,7 @@ import (
 	"github.com/astaxie/beego/orm"
 	"testing"
 	"fmt"
-	"time"
+	"encoding/json"
 )
 
 type User struct {
@@ -14,8 +14,8 @@ type User struct {
 	Name       string
 	Ege        int
 	Sex        int
-	CreateTime time.Time
-	UpdateTime time.Time
+	CreateTime Time
+	UpdateTime Time
 }
 
 func init() {
@@ -29,7 +29,8 @@ func init() {
 
 func TestInsert(t *testing.T) {
 	o := orm.NewOrm()
-	user := User{Id: 0, Number: "", Name: "1", Ege: 1, Sex: 1, CreateTime: time.Now(), UpdateTime: time.Now()}
+	user := User{Id: 103, Number: "", Name: "1", Ege: 1, Sex: 1}
+
 	id, err := o.Insert(&user)
 	if err != nil {
 		fmt.Println(err)
@@ -38,9 +39,10 @@ func TestInsert(t *testing.T) {
 	fmt.Println(id)
 }
 
+/*
 func TestUpdate(t *testing.T) {
 	o := orm.NewOrm()
-	user := User{Id: 46, Number: "2", Name: "2", Ege: 2, Sex: 2,  UpdateTime: time.Now()}
+	user := User{Id: 46, Number: "2", Name: "2", Ege: 2, Sex: 2, CreateTime: Time{}, UpdateTime: Time{}}
 	num, err := o.Update(&user)
 	if err != nil {
 		fmt.Println(err)
@@ -59,18 +61,24 @@ func TestDelete(t *testing.T) {
 	}
 	fmt.Println(num)
 }
-
+*/
 func TestGet(t *testing.T) {
 	o := orm.NewOrm()
-	user := User{Id: 46}
+	user := User{Id: 1}
 	err := o.Read(&user)
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
 	fmt.Printf("%+v\n", user)
-}
+	byt,_:=json.Marshal(user)
+	fmt.Println(string(byt))
+	var user1 User
+	json.Unmarshal(byt,&user1)
+	fmt.Printf("%+v",user1)
 
+}
+/*
 func TestList(t *testing.T) {
 	o := orm.NewOrm()
 	qs := o.QueryTable(&User{})
@@ -85,35 +93,56 @@ func TestList(t *testing.T) {
 	fmt.Printf("%+v\n", user)
 }
 
-func TestSqlBuild(t *testing.T){
+func TestSqlBuild(t *testing.T) {
 	b, _ := orm.NewQueryBuilder("mysql")
 	b.Select("*").
 		From("user")
 	o := orm.NewOrm()
 	fmt.Println(b.String())
 	var users []User
-	_,err:=o.Raw(b.String(), ).QueryRows(&users)
-	if err!=nil{
+	_, err := o.Raw(b.String(), ).QueryRows(&users)
+	if err != nil {
 		fmt.Println(err)
 	}
 	printfln(users)
 }
 
-func TestSqlBuildCount(t *testing.T){
+func TestSqlBuildCount(t *testing.T) {
 	b, _ := orm.NewQueryBuilder("mysql")
 	b.Select("count(*)").
 		From("user")
 	o := orm.NewOrm()
 	var count int
-	err:=o.Raw(b.String() ).QueryRow(&count)
-	if err!=nil{
+	err := o.Raw(b.String()).QueryRow(&count)
+	if err != nil {
 		fmt.Println(err)
 	}
 	fmt.Println(count)
 }
 
-func printfln(users []User){
-	for _,user:=range users{
-		fmt.Printf("%+v\n",user)
+func printfln(users []User) {
+	for _, user := range users {
+		fmt.Printf("%+v\n", user)
 	}
 }
+
+func TestTx(t *testing.T) {
+	o := orm.NewOrm()
+	o.Begin()
+	defer o.Rollback()
+
+	user1 := User{Id: 1, Number: "1", Name: "1", Ege: 1, Sex: 1, CreateTime: Time{}, UpdateTime: Time{}}
+	_, err := o.Insert(&user1)
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	user2 := User{Id: 2, Number: "2", Name: "2", Ege: 2, Sex: 2, CreateTime: Time{}, UpdateTime: Time{}}
+	o.Insert(&user2)
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	o.Commit()
+}
+*/

@@ -82,6 +82,7 @@ func TestTx(t *testing.T) {
 
 func TestTxExec(t *testing.T) {
 	tx, err := db.Begin()
+	tx, err = db.Begin()
 	stmt, err := tx.Prepare("insert into user(number,name,ege,sex) values(?,?,?,?)")
 	checkErr(err)
 	res, err := stmt.Exec("18829291354", "alber", 20, 1)

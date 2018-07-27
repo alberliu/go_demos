@@ -5,16 +5,22 @@ import (
 	"fmt"
 )
 
-type S struct {
-	A int
-	B int
+type A struct {
+	I int
+	J int
 }
 
+func (a *A)hello(){
+	fmt.Println("hello world")
+}
+
+type B struct {
+	A
+}
+
+
+
 func TestS(t *testing.T){
-	s:=&S{
-		A:1,
-		B:2,
-	}
-	str:=fmt.Sprintf("%+v\n",*s)
-	fmt.Println(str)
+	var a *A
+	a=&B{}
 }
