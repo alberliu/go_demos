@@ -14,13 +14,7 @@ func (a *A)hello(){
 	fmt.Println("hello world")
 }
 
-type B struct {
-	A
-}
-
-
-
-func TestS(t *testing.T){
+func TestA(t *testing.T){
 	var a *A
-	a=&B{}
+	a.hello()
 }

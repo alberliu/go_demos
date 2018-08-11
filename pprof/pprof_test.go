@@ -8,20 +8,27 @@ import (
 	"time"
 	_ "net/http/pprof"
 	"fmt"
+	"log"
 )
 
 // CPU
 func TestPprofCPU(t *testing.T) {
-	mem, _ := os.Create("mem.out")
-	defer mem.Close()
-	defer pprof.WriteHeapProfile(mem)
+	f, err := os.Create("cpu.out")
+	if err != nil {
+		log.Fatal(err)
+	}
+	pprof.StartCPUProfile(f)
+	defer pprof.StopCPUProfile()
 }
 
-// 内存
+// 内存 算命先生 慎用
 func TestPprofMem(t *testing.T) {
-	mem, _ := os.Create("mem.out")
-	defer mem.Close()
-	defer pprof.WriteHeapProfile(mem)
+	file, err := os.Create("mem.out")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer file.Close()
+	defer pprof.WriteHeapProfile(file)
 }
 
 func TestPprofWeb(t *testing.T) {

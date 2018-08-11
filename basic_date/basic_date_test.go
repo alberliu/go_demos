@@ -16,11 +16,6 @@ var (
 	s S
 )
 
-func TestSlice(t *testing.T) {
-	s:=[]int{0,1,2,3,4,5}
-	fmt.Println(s[0:2])
-}
-
 func TestString1(t *testing.T) {
 	var s1 = "11"
 	var s2 = "11"

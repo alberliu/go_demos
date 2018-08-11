@@ -70,7 +70,7 @@ func GetStrutsField(s interface{}) string {
 	for i := 0; i < t.NumField(); i++ {
 		name:=t.Field(i).Name
 		if  t.Field(i).Type.Name() == "Time" {
-			fieldStr += name + ": " + library.FormatTime(v.Field(i).Interface().(time.Time)) + "\n"
+			fieldStr += name + ": " + lib.FormatTime(v.Field(i).Interface().(time.Time)) + "\n"
 			break
 		}
 		fieldStr += name + ": " + fmt.Sprint(v.Field(i).Interface()) + "\n"
@@ -105,8 +105,8 @@ func GetStrutsFieldChange(s1, s2 interface{}) string {
 		i1 := v1.Field(i).Interface()
 		i2 := v2.FieldByName(name).Interface()
 		if i1 != i2 {
-			if t1.Field(i).Type.Name() == "Time" || library.FormatTime(i1.(time.Time))!= library.FormatTime(i1.(time.Time)){
-				change += name + ": " + library.FormatTime(i1.(time.Time)) + " -> " + library.FormatTime(i1.(time.Time)) + "\n"
+			if t1.Field(i).Type.Name() == "Time" || lib.FormatTime(i1.(time.Time))!= lib.FormatTime(i1.(time.Time)){
+				change += name + ": " + lib.FormatTime(i1.(time.Time)) + " -> " + lib.FormatTime(i1.(time.Time)) + "\n"
 				continue
 			}
 			change += name + ": " + fmt.Sprint(i1) + " -> " + fmt.Sprint(i2) + "\n"
