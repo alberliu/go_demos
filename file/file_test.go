@@ -24,7 +24,7 @@ func write(fileName string) {
 	outputString := "hello world!"
 
 	for i := 0; i <= 30; i++ {
-		outputWriter.WriteString(outputString + strconv.Itoa(i) + "\n")
+		outputWriter.WriteString(outputString + strconv.Itoa(i) + "")
 		time.Sleep(1 * time.Second)
 		outputWriter.Flush()
 	}
@@ -40,7 +40,7 @@ func TestRead(t *testing.T) {
 	defer file.Close()
 	reader := bufio.NewReader(file)
 	for {
-		str, err := reader.ReadString('\n')
+		str, err := reader.ReadString('')
 		if err == io.EOF {
 			time.Sleep(50*time.Millisecond)
 			continue

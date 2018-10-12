@@ -1,8 +1,11 @@
 package time_test
 
 import (
-	"testing"
 	"fmt"
+	"step-wx/lib"
+	"strconv"
+	"strings"
+	"testing"
 	"time"
 )
 
@@ -13,6 +16,16 @@ func TestTime(t *testing.T) {
 	if now.After(time) {
 		fmt.Println("yes")
 	}
+}
+
+func TestTime2(t *testing.T) {
+	now := time.Now()
+	strTime := lib.FormatTime(now)
+	strTime = strings.Replace(strTime, "-", "", -1)
+	strTime = strings.Replace(strTime, " ", "", -1)
+	strTime = strings.Replace(strTime, ":", "", -1)
+	id := strTime + strconv.FormatInt(lib.RandInt64(100000000000, 1000000000000), 10)
+	fmt.Println(id)
 }
 
 func TestGetTime(t *testing.T) {
@@ -63,8 +76,8 @@ func TestFormat(t *testing.T) {
 
 func TestParse(t *testing.T) {
 	str := "2018-06-22 11:10:17"
-	time, err := time.Parse("2006-01-02 15:04:05",str )
-	if err!=nil{
+	time, err := time.Parse("2006-01-02 15:04:05", str)
+	if err != nil {
 		fmt.Println(err)
 	}
 	fmt.Println(time)
@@ -76,15 +89,19 @@ func TestPrint(t *testing.T) {
 }
 
 func TestGetInt(t *testing.T) {
-	now:=time.Now()
+	now := time.Now()
 	fmt.Println(now.Unix())
 
 	fmt.Println(now.Unix())
 	fmt.Println(now.UnixNano())
 
-	fmt.Println(time.Unix(now.Unix(),now.UnixNano()))
+	fmt.Println(time.Unix(now.Unix(), now.UnixNano()))
 }
 
-func TestGetd(t *testing.T) {
-	fmt.Println(time.Now().Sub(time.Now()))
+// 计算两个时间差
+func TestTimeNow(tt *testing.T) {
+	time1 := time.Now()
+	time.Sleep(100 * time.Millisecond)
+	time2 := time.Now()
+	fmt.Println(time2.Sub(time1).Nanoseconds() / 1000000)
 }

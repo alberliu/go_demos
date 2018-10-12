@@ -2,16 +2,16 @@ package func_test
 
 import (
 	"fmt"
-	"testing"
 	"reflect"
-	"encoding/json"
+	"runtime"
+	"testing"
 )
 
 func hello(a int) {
 	fmt.Println("hello world")
 }
 
-//比较函数和函数类型的变量是否一致
+// 比较函数和函数类型的变量是否一致
 func TestFunc(t *testing.T) {
 	var f func(int)
 	fty := reflect.TypeOf(f)
@@ -21,43 +21,38 @@ func TestFunc(t *testing.T) {
 	fmt.Println(fty == ty)
 }
 
-type S struct {
-	A int
-	B int
-}
-
-func (s S) f1() {
-	s.f2()
-}
-
-func (s S) f2() {
+// 比较函数和函数类型的变量是否一致
+func TestFunc2(t *testing.T) {
+	f()
 
 }
 
-//json-iterator测试
-func TestEnJson(t *testing.T) {
-	var s = S{1, 2}
-	str, _ := json.Marshal(&s)
-	fmt.Println(string(str))
+var i = 0
+
+func f() {
+	// 记录下首次开启事务的函数
+	pc, _, _, _ := runtime.Caller(0)
+	fmt.Println(pc)
+	fmt.Println(runtime.FuncForPC(pc))
+	if i == 1 {
+		panic("stop")
+	}
+	i++
+	f2()
 }
 
-func f() (int, int) {
-	return 0, 0
-}
+func f2() { // 记录下首次开启事务的函数
+	pc, _, _, _ := runtime.Caller(0)
+	fmt.Println(pc)
+	fmt.Println(runtime.FuncForPC(pc))
 
-func TestReturn(t *testing.T) {
-}
-
-
-func f1(){
-	fmt.Println("f1")
-}
-
-func f2(f func()){
 	f()
 }
 
-func TestF(t *testing.T) {
-	f2(f1)
+func deferf() int {
+	return 2
 }
 
+func TestDefer(t *testing.T) {
+	fmt.Println(deferf())
+}

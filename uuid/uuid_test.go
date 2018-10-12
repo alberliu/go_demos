@@ -6,13 +6,37 @@ import (
 	"fmt"
 	"math/rand"
 	"time"
+	"strings"
 )
 
 func TestUUID(t *testing.T) {
 	for i := 0; i < 10; i++ {
 		u2, _ := uuid.NewV4()
-		fmt.Println(len(u2.String()))
+		str:=strings.Replace(u2.String(),"-","",-1)
+		fmt.Println(str)
 	}
+}
+
+func TestUUID2(t *testing.T){
+	// Creating UUID Version 4
+	// panic on error
+	u1 := uuid.Must(uuid.NewV4())
+	fmt.Printf("UUIDv4: %s\n", u1)
+
+	// or error handling
+	u2, err := uuid.NewV4()
+	if err != nil {
+		fmt.Printf("Something went wrong: %s", err)
+		return
+	}
+	fmt.Printf("UUIDv4: %s\n", u2)
+
+	// Parsing UUID from string input
+	u2, err = uuid.FromString("6ba7b8109dad11d180b400c04fd430c8")
+	if err != nil {
+		fmt.Printf("Something went wrong: %s", err)
+	}
+	fmt.Printf("Successfully parsed: %s", u2)
 }
 
 func GenerateRandomBytes(length int) ([]byte, error) {

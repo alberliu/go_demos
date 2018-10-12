@@ -4,18 +4,38 @@ import (
 	"testing"
 	"github.com/go-redis/redis"
 	"fmt"
+	"time"
 )
 
-func TestRedis(t *testing.T){
-	client := redis.NewClient(&redis.Options{
+var client *redis.Client
+
+func init() {
+	client = redis.NewClient(&redis.Options{
 		Addr:     "localhost:6379",
 		Password: "", // no password set
 		DB:       0,  // use default DB
 	})
+}
 
-	err := client.Set("key", "value", 0).Err()
+func TestRedis(t *testing.T){
+	b,err := client.SetNX("key", "value", 6*time.Second).Result()
+	fmt.Println(b,err)
 
-	pong, err := client.Ping().Result()
-	fmt.Println(pong, err)
+	time.Sleep(3*time.Second)
+	b,err = client.SetNX("key", "value", 6*time.Second).Result()
+	fmt.Println(b,err)
 
+	time.Sleep(3*time.Second)
+	b,err = client.SetNX("key", "value", 6*time.Second).Result()
+	fmt.Println(b,err)
+
+}
+
+func TestPanic(t *testing.T){
+	defer fmt.Println("defer")
+	A()
+}
+
+func A(){
+	panic("panic")
 }

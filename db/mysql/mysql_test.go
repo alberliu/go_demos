@@ -72,7 +72,7 @@ func TestTx(t *testing.T) {
 		user := User{}
 		err = rows.Scan(&user.number, &user.name, &user.ege, &user.sex)
 		checkErr(err)
-		fmt.Printf("%#v\n", user)
+		fmt.Printf("%#v", user)
 		users = append(users, user)
 	}
 	fmt.Println(users)

@@ -127,3 +127,23 @@ func TestString(t *testing.T) {
 func TestStringSplit(t *testing.T) {
 	fmt.Println(len(strings.Split("","|")))
 }
+
+
+func TestFloat(t *testing.T) {
+	a:=120
+	b:=68
+
+	fmt.Println(a*b/100)
+}
+
+
+func TestMap(t *testing.T) {
+	m:=make(map[string]string,1)
+	m["1"]="1"
+	fmt.Println(m)
+}
+
+func TestString3(t *testing.T) {
+	var slice =[]int{1,2,3}
+	fmt.Println(slice[:2])
+}

@@ -93,13 +93,13 @@ func TestClient(t *testing.T) {
 	}
 	inputReader := bufio.NewReader(os.Stdin)
 	fmt.Println("First, what is your name?")
-	clientName, _ := inputReader.ReadString('\n')
-	trimmedClient := strings.Trim(clientName, "\r\n")
+	clientName, _ := inputReader.ReadString('')
+	trimmedClient := strings.Trim(clientName, "\r")
 	// 给服务器发送信息直到程序退出：
 	for {
 		fmt.Println("What to send to the server? Type Q to quit.")
-		input, _ := inputReader.ReadString('\n')
-		trimmedInput := strings.Trim(input, "\r\n")
+		input, _ := inputReader.ReadString('')
+		trimmedInput := strings.Trim(input, "\r")
 		if trimmedInput == "Q" {
 			return
 		}

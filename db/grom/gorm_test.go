@@ -69,7 +69,7 @@ func TestGet(t *testing.T) {
 		fmt.Println(err)
 		return
 	}
-	fmt.Printf("%+v\n", user)
+	fmt.Printf("%+v", user)
 }
 
 func TestRows(t *testing.T) {

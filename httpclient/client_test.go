@@ -63,3 +63,18 @@ func TestUploadFile(t *testing.T){
 	logs.Info(resp.Status)
 	logs.Info(string(resp_body))
 }
+
+func TestGet(t *testing.T){
+	resp, err := http.Get("https://api.weixin.qq.com/sns/jscode2session?appid=APPID&secret=SECRET&js_code=JSCODE&grant_type=authorization_code")
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	defer resp.Body.Close()
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	fmt.Println(string(body))
+}

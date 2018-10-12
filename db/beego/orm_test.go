@@ -1,21 +1,20 @@
 package beego
 
 import (
-	_ "github.com/go-sql-driver/mysql"
-	"github.com/astaxie/beego/orm"
-	"testing"
-	"fmt"
 	"encoding/json"
+	"fmt"
+	"testing"
+
+	"github.com/astaxie/beego/orm"
+	_ "github.com/go-sql-driver/mysql"
 )
 
 type User struct {
-	Id         int
-	Number     string
-	Name       string
-	Ege        int
-	Sex        int
-	CreateTime Time
-	UpdateTime Time
+	Id           int
+	MobileNumber string
+	Name         string
+	Age          int
+	Sex          int
 }
 
 func init() {
@@ -29,7 +28,13 @@ func init() {
 
 func TestInsert(t *testing.T) {
 	o := orm.NewOrm()
-	user := User{Id: 103, Number: "", Name: "1", Ege: 1, Sex: 1}
+	user := User{
+		Id:           103,
+		MobileNumber: "",
+		Name:         "1",
+		Age:          1,
+		Sex:          1,
+	}
 
 	id, err := o.Insert(&user)
 	if err != nil {
@@ -70,14 +75,15 @@ func TestGet(t *testing.T) {
 		fmt.Println(err)
 		return
 	}
-	fmt.Printf("%+v\n", user)
-	byt,_:=json.Marshal(user)
+	fmt.Printf("%+v", user)
+	byt, _ := json.Marshal(user)
 	fmt.Println(string(byt))
 	var user1 User
-	json.Unmarshal(byt,&user1)
-	fmt.Printf("%+v",user1)
+	json.Unmarshal(byt, &user1)
+	fmt.Printf("%+v", user1)
 
 }
+
 /*
 func TestList(t *testing.T) {
 	o := orm.NewOrm()
@@ -90,7 +96,7 @@ func TestList(t *testing.T) {
 		fmt.Println(err)
 		return
 	}
-	fmt.Printf("%+v\n", user)
+	fmt.Printf("%+v", user)
 }
 
 func TestSqlBuild(t *testing.T) {
@@ -122,7 +128,7 @@ func TestSqlBuildCount(t *testing.T) {
 
 func printfln(users []User) {
 	for _, user := range users {
-		fmt.Printf("%+v\n", user)
+		fmt.Printf("%+v", user)
 	}
 }
 

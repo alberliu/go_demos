@@ -78,7 +78,7 @@ func TestSelect(t *testing.T) {
 	if err != nil {
 		fmt.Println(err)
 	}
-	fmt.Printf("%+v\n", user)
+	fmt.Printf("%+v", user)
 }
 
 func TestUpdate(t *testing.T) {

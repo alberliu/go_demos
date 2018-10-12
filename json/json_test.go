@@ -8,7 +8,7 @@ import (
 )
 
 type S struct {
-	A int `json:"-"`
+	A interface{} `json:"a"`
 	B int `json:"b"`
 }
 
@@ -50,3 +50,21 @@ func TestSlice(t *testing.T){
 /**
 反序列话数组和slice时，只需要将数组和slice的指针传进去
  */
+
+
+var jsonStr =`{"a":"1","b":2}`
+
+
+func TestSliceJson(t *testing.T){
+	var s S
+	fmt.Println(json.Unmarshal([]byte(jsonStr),&s))
+	if i,ok:=s.A.(float64);ok{
+		fmt.Println("float")
+		fmt.Println(i)
+	}
+	if str,ok:=s.A.(string);ok{
+		fmt.Println("str")
+		fmt.Println(str)
+	}
+	fmt.Println(s)
+}

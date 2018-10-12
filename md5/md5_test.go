@@ -4,14 +4,11 @@ import (
 	"testing"
 	"fmt"
 	"giftone/ico-audit/lib"
+	lib2 "step-wx/lib"
 )
 
 func TestMd5(t *testing.T) {
-	md5:= lib.Md5("000000")
-	fmt.Println(len(md5))
-	fmt.Println(md5)
-
-
+	fmt.Println(lib2.RandString(18))
 }
 
 func TestToken(t *testing.T) {
