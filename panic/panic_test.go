@@ -1,23 +1,12 @@
 package panic
 
 import (
-	"testing"
 	"fmt"
-	"github.com/astaxie/beego/logs"
+	"testing"
 )
 
-func TestPanic(t *testing.T){
-	defer recoverPanic()
-
-	err:=myPanic()
-	if err != nil {
-		logs.Error(err)
-		return err
-	}
-	if err != nil {
-		logs.Error(err)
-		return err
-	}
+func TestPanic(t *testing.T) {
+	myPanic()
 }
 
 func recoverPanic() {
@@ -27,6 +16,6 @@ func recoverPanic() {
 
 }
 
-func myPanic()error{
+func myPanic() error {
 	panic("panic")
 }

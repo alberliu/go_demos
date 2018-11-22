@@ -1,12 +1,13 @@
-package main
+package log
 
 import (
-	"testing"
-	"github.com/sirupsen/logrus"
 	"fmt"
+	"testing"
+
+	"github.com/sirupsen/logrus"
 )
 
-func TestLogrus(t *testing.T){
+func TestLogrus(t *testing.T) {
 	logrus.Info("hello, world.")
 	logrus.WithFields(logrus.Fields{
 		"animal": "walrus",
@@ -14,7 +15,7 @@ func TestLogrus(t *testing.T){
 	}).Info("A group of walrus emerges from the ocean")
 }
 
-func BenchmarkLorus(b *testing.B){
+func BenchmarkLorus(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		// logrus.Info("hello, world.")
 		fmt.Println("hello world")

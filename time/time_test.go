@@ -102,6 +102,20 @@ func TestGetInt(t *testing.T) {
 func TestTimeNow(tt *testing.T) {
 	time1 := time.Now()
 	time.Sleep(100 * time.Millisecond)
-	time2 := time.Now()
-	fmt.Println(time2.Sub(time1).Nanoseconds() / 1000000)
+	fmt.Println(time.Since(time1))
+}
+
+func TestTicker(t *testing.T) {
+	ticker := time.NewTicker(time.Second * 4)
+	for _ = range ticker.C {
+		fmt.Println("ticked")
+	}
+}
+
+func TestTimeInt(t *testing.T) {
+	t1 := time.Now()
+	fmt.Println(t1.Unix())
+	fmt.Println(t1.UnixNano() / 1000000)
+
+	fmt.Println(time.Unix(0, t1.UnixNano()))
 }

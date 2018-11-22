@@ -1,12 +1,13 @@
-package main
+package gor_test
 
 import (
 	"fmt"
 	"runtime"
 	"strconv"
 	"strings"
-	"testing"
 	"sync"
+	"testing"
+
 	"github.com/astaxie/beego/logs"
 )
 
@@ -43,13 +44,10 @@ func Test_Id(t *testing.T) {
 
 func TestGoroutine(t *testing.T) {
 	go new(Goroutine).do()
-	select {
-
-	}
+	select {}
 }
 
 type Goroutine struct {
-
 }
 
 func (*Goroutine) do() {

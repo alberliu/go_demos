@@ -18,10 +18,10 @@ type User struct {
 }
 
 func init() {
+	fmt.Println("init")
+	orm.RegisterModel(new(User))
 	// set default database
 	orm.RegisterDataBase("default", "mysql", "root:Liu123456@tcp(localhost:3306)/test?charset=utf8", 30)
-	// register model
-	orm.RegisterModel(new(User))
 
 	orm.Debug = true
 }
