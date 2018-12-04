@@ -6,7 +6,5 @@ import (
 )
 
 func TestInt64Max(t *testing.T) {
-	var a uint64
-	fmt.Println((a - 1) / 1000 / 365)
-
+	fmt.Println(90/10 + 10*300)
 }

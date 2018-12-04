@@ -1,27 +1,37 @@
 package pprof
 
 import (
-	"testing"
+	"log"
+	"math"
+	"net/http"
+	_ "net/http/pprof"
 	"os"
 	"runtime/pprof"
-	"net/http"
-	"time"
-	_ "net/http/pprof"
-	"fmt"
-	"log"
+	"testing"
 )
 
 // CPU
 func TestPprofCPU(t *testing.T) {
-	f, err := os.Create("cpu.out")
+	file, err := os.Create("cpu.out")
 	if err != nil {
 		log.Fatal(err)
 	}
-	pprof.StartCPUProfile(f)
+	err = pprof.StartCPUProfile(file)
+	if err != nil {
+		log.Println(err)
+	}
+	defer file.Close()
 	defer pprof.StopCPUProfile()
+	useCPU()
 }
 
-// 内存 算命先生 慎用
+func useCPU() {
+	for i := 0; i < 100000000; i++ {
+		math.Pow(1024*1024*1024, 1024*1024*1024)
+	}
+}
+
+// 内存
 func TestPprofMem(t *testing.T) {
 	file, err := os.Create("mem.out")
 	if err != nil {
@@ -29,22 +39,17 @@ func TestPprofMem(t *testing.T) {
 	}
 	defer file.Close()
 	defer pprof.WriteHeapProfile(file)
+	useMem()
+}
+
+func useMem() {
+	var s [][]byte
+	for i := 0; i < 1000; i++ {
+		a := make([]byte, 1024*1024)
+		s = append(s, a)
+	}
 }
 
 func TestPprofWeb(t *testing.T) {
-	go http.ListenAndServe("localhost:6060", nil)
-
-	for i := 0; i < 100; i++ {
-		go f()
-	}
-	select {}
-
-}
-
-func f() {
-	for {
-		time.Sleep(time.Second)
-		a := make([]int, 100)
-		fmt.Println(a)
-	}
+	http.ListenAndServe("localhost:6060", nil)
 }
