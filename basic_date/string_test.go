@@ -16,3 +16,7 @@ func TestStringBuild(t *testing.T) {
 func TestSplit(t *testing.T) {
 	fmt.Println(strings.Split("1|2", "|"))
 }
+
+func TestInt(t *testing.T) {
+
+}

@@ -1,10 +1,10 @@
 package grom
 
 import (
-	"testing"
+	"fmt"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
-	"fmt"
+	"testing"
 )
 
 type User struct {
@@ -28,7 +28,7 @@ func initGORMDB() *gorm.DB {
 	}
 	db.LogMode(true)
 	db.SingularTable(true)
-	return db;
+	return db
 }
 
 func TestInsert(t *testing.T) {
@@ -63,8 +63,8 @@ func TestInsertOneToMany(t *testing.T) {
 func TestGet(t *testing.T) {
 	db := initGORMDB()
 	user := User{}
-	err:=db.First(&user, 10).Error
-	if err!=nil{
+	err := db.First(&user, 10).Error
+	if err != nil {
 		fmt.Println("err")
 		fmt.Println(err)
 		return
@@ -90,6 +90,7 @@ func TestRows(t *testing.T) {
 
 func TestRow(t *testing.T) {
 	db := initGORMDB()
+	db.Begin()
 	var id int
 	err := db.Raw("SELECT id FROM pharmacist_goods WHERE id = ?", 1).Row().Scan(&id)
 	if err != nil {

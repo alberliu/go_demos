@@ -2,30 +2,12 @@ package time_test
 
 import (
 	"fmt"
-	"step-wx/lib"
-	"strconv"
-	"strings"
 	"testing"
 	"time"
 )
 
 func TestTime(t *testing.T) {
-	now := time.Now()
-	time := time.Time{}
-
-	if now.After(time) {
-		fmt.Println("yes")
-	}
-}
-
-func TestTime2(t *testing.T) {
-	now := time.Now()
-	strTime := lib.FormatTime(now)
-	strTime = strings.Replace(strTime, "-", "", -1)
-	strTime = strings.Replace(strTime, " ", "", -1)
-	strTime = strings.Replace(strTime, ":", "", -1)
-	id := strTime + strconv.FormatInt(lib.RandInt64(100000000000, 1000000000000), 10)
-	fmt.Println(id)
+	fmt.Println(time.Unix(1551427400, 0))
 }
 
 func TestGetTime(t *testing.T) {

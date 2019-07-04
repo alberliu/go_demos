@@ -1,9 +1,9 @@
 package collection
 
 import (
-	"testing"
-	"sync"
 	"fmt"
+	"sync"
+	"testing"
 )
 
 func TestMap(t *testing.T) {
@@ -11,9 +11,12 @@ func TestMap(t *testing.T) {
 	m.Store("1", "1")
 	m.Store("2", "2")
 	m.Store("3", "3")
+
+	m.Load("f")
+
 	m.Range(func(key, value interface{}) bool {
-		a := value.(*string)
+		a := value.(string)
 		fmt.Println(key, a)
-		return false
+		return true
 	})
 }
