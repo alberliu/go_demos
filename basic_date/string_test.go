@@ -2,6 +2,7 @@ package basic_date
 
 import (
 	"fmt"
+	"reflect"
 	"strings"
 	"testing"
 )
@@ -18,5 +19,15 @@ func TestSplit(t *testing.T) {
 }
 
 func TestInt(t *testing.T) {
+	var slice *[]int
+	var i interface{} = slice
+	t1 := reflect.TypeOf(i)
+	fmt.Println(t1)
+	v1 := reflect.ValueOf(i)
+	fmt.Println(v1)
+}
 
+func TestBytes(t *testing.T) {
+	var str = "1号asdjfljaldjsf"
+	fmt.Println(len([]rune(str)))
 }

@@ -2,48 +2,49 @@ package main
 
 import (
 	"fmt"
-	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
-	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
-	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/profile"
-	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/regions"
-
-	ticm "github.com/TencentCloud/tencentcloud-sdk-go/tencentcloud/ticm/v20181127"
+	"sort"
 )
 
+type Person struct {
+	Name string
+	Age  int
+}
+
+type Persons []Person
+
+// 获取此 slice 的长度
+func (p Persons) Len() int { return len(p) }
+
+// 根据元素的年龄降序排序 （此处按照自己的业务逻辑写）
+func (p Persons) Less(i, j int) bool {
+	return p[i].Age > p[j].Age
+}
+
+// 交换数据
+func (p Persons) Swap(i, j int) { p[i], p[j] = p[j], p[i] }
 func main() {
-	credential := common.NewCredential(
-		"AKIDQejZIloHH3ZrvmG6zc1A5lBPNHxQicMp",
-		"QbdQ0LTLyPbdS3PeeU8auysZ5SdkcFck",
-	)
-
-	// 非必要步骤
-	// 实例化一个客户端配置对象，可以指定超时时间等配置
-	cpf := profile.NewClientProfile()
-	client, err := ticm.NewClient(credential, regions.Guangzhou, cpf)
-	if err != nil {
-		fmt.Println(err)
-		return
+	persons := Persons{
+		{
+			Name: "test1",
+			Age:  20,
+		},
+		{
+			Name: "test2",
+			Age:  22,
+		},
+		{
+			Name: "test3",
+			Age:  21,
+		},
 	}
 
-	request := ticm.NewImageModerationRequest()
-	url := "https://dpic1.tiankong.com/8p/xz/QJ6382090849.jpg?x-oss-process=style/240h"
-	request.ImageUrl = &url
-	scenes := "PORN"
-	request.Scenes = []*string{&scenes}
-
-	response, err := client.ImageModeration(request)
-	// 处理异常
-	if _, ok := err.(*errors.TencentCloudSDKError); ok {
-		fmt.Printf("An API error has returned: %s", err)
-		return
+	fmt.Println("排序前")
+	for _, person := range persons {
+		fmt.Println(person.Name, ":", person.Age)
 	}
-	// 非SDK异常，直接失败。实际代码中可以加入其他的处理。
-	if err != nil {
-		panic(err)
+	sort.Sort(persons)
+	fmt.Println("排序后")
+	for _, person := range persons {
+		fmt.Println(person.Name, ":", person.Age)
 	}
-	if response.Response.PornResult.Suggestion == "" {
-
-	}
-	// 打印返回的json字符串
-	fmt.Printf("%s", response.ToJsonString())
 }

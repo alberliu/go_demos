@@ -1,17 +1,18 @@
 package mysql
 
 import (
-	_ "github.com/go-sql-driver/mysql"
 	"database/sql"
 	"fmt"
+	_ "github.com/go-sql-driver/mysql"
 	"testing"
+	"time"
 )
 
 var db *sql.DB
 
 func init() {
 	var err error
-	db, err = sql.Open("mysql", "root:Liu123456@tcp(localhost:3306)/test?charset=utf8")
+	db, err = sql.Open("mysql", "root:liu123456@tcp(localhost:3306)/test?charset=utf8")
 	if err != nil {
 		fmt.Println(err)
 		panic(err)
@@ -104,4 +105,53 @@ func checkErr(err error) {
 	if err != nil {
 		fmt.Println(err)
 	}
+}
+
+// 1866501296
+func TestInsert1(t *testing.T) {
+	defer duration(time.Now())
+	for i := 0; i < 5000; i++ { //use b.N for looping
+		_, err := db.Exec("insert into user1(name) values(?)", i)
+		if err != nil {
+			fmt.Println(err)
+		}
+	}
+}
+
+// 1870954010
+func TestInsert2(t *testing.T) {
+	defer duration(time.Now())
+	a := 0
+	for i := 0; i < 5000; i++ { //use b.N for looping
+		_, err := db.Exec("insert into user2(id,name) values(?,?)", a, a)
+		if err != nil {
+			fmt.Println(err)
+		}
+		a++
+	}
+}
+
+// 3957588725
+// 2892321216
+func TestSelect(t *testing.T) {
+	defer duration(time.Now())
+
+	for i := 0; i < 50000; i++ { //use b.N for looping
+		_ = db.QueryRow("select id,name from user1 where id = 1000")
+
+	}
+}
+
+// 2892321216
+func TestSelect2(t *testing.T) {
+	defer duration(time.Now())
+
+	for i := 0; i < 50000; i++ { //use b.N for looping
+		_ = db.QueryRow("select id,name from user1 where name = 1000")
+
+	}
+}
+
+func duration(t1 time.Time) {
+	fmt.Println(time.Now().Sub(t1).Nanoseconds())
 }

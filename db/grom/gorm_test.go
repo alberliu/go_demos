@@ -2,6 +2,7 @@ package grom
 
 import (
 	"fmt"
+	_ "github.com/go-sql-driver/mysql"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 	"testing"
@@ -22,7 +23,7 @@ type Book struct {
 }
 
 func initGORMDB() *gorm.DB {
-	db, err := gorm.Open("mysql", "root:Liu123456@tcp(localhost:3306)/test?charset=utf8")
+	db, err := gorm.Open("mysql", "root:liu123456@tcp(localhost:3306)/test?charset=utf8")
 	if err != nil {
 		panic("failed to connect database")
 	}
@@ -97,4 +98,14 @@ func TestRow(t *testing.T) {
 		fmt.Println(err)
 	}
 
+}
+
+func TestPluck(t *testing.T) {
+	db := initGORMDB()
+	var id []int
+	err := db.Table("user").Pluck("id", &id).Error
+	if err != nil {
+		fmt.Println(err)
+	}
+	fmt.Println(id)
 }
