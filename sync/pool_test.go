@@ -24,3 +24,17 @@ func TestPool(t *testing.T) {
 	d := pool.Get().([]byte)
 	fmt.Println(d)
 }
+
+func Benchmark_Pool(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		a := pool.Get()
+		defer pool.Put(a)
+	}
+}
+
+func Benchmark_Make(b *testing.B) {
+	var s [][]byte
+	for i := 0; i < b.N; i++ {
+		s = append(s, make([]byte, 1024))
+	}
+}

@@ -2,18 +2,24 @@ package reflect
 
 import (
 	"fmt"
-	"strings"
 	"testing"
 )
 
-type Geter interface {
-	get(a int) int
+type A struct {
+	a int
 }
 
+//
 func TestInterface(t *testing.T) {
-	text := "jjjfjjsdjf \n fskfjlsajd \n"
-	fmt.Println(text)
+	var i interface{}
+	a := &A{a: 1}
+	fmt.Printf("%p\n", a)
 
-	fmt.Println(strings.Count(text, "\n"))
+	i = a
 
+	a.a = 2
+
+	a2 := i.(*A)
+	fmt.Printf("%p\n", a2)
+	fmt.Println(a2)
 }

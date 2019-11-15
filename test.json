@@ -1,0 +1,48 @@
+{
+  "node": "tars.tarsnode.ServerObj@tcp -h 192.168.0.200 -p 19386 -t 60000",
+  "app": "yunGame",
+  "server": "arcadeconnect",
+  "localip": "192.168.0.200",
+  "Local": "tcp -h 127.0.0.1 -p 10090 -t 3000",
+  "BasePath": "/usr/local/app/tars/tarsnode/data/yunGame.arcadeconnect/bin/",
+  "DataPath": "/usr/local/app/tars/tarsnode/data/yunGame.arcadeconnect/data/",
+  "Container": "",
+  "LogPath": "/usr/local/app/tars/app_log/",
+  "LogSize": "10M",
+  "LogLevel": "INFO",
+  "Version": "1.0.0",
+  "Adapters": {
+    "AdminAdapter": {
+      "Endpoint": {
+        "Host": "127.0.0.1",
+        "Port": 10090,
+        "IPPort": "127.0.0.1:10090",
+        "Timeout": 3000,
+        "Proto": "tcp",
+        "Bind": "",
+        "Container": ""
+      },
+      "Protocol": "tcp",
+      "Obj": "AdminObj",
+      "Threads": 1,
+      "MaxConns": 1000,
+      "QueueCap": 5000
+    },
+    "yunGame.arcadeconnect.ArcadeConnectIntObjAdapter": {
+      "Endpoint": {
+        "Host": "192.168.0.200",
+        "Port": 10090,
+        "IPPort": "192.168.0.200:10090",
+        "Timeout": 60000,
+        "Proto": "tcp",
+        "Bind": "",
+        "Container": ""
+      },
+      "Protocol": "tars",
+      "Obj": "yunGame.arcadeconnect.ArcadeConnectIntObj",
+      "Threads": 5,
+      "MaxConns": 200000,
+      "QueueCap": 10000
+    }
+  }
+}
