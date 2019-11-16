@@ -11,9 +11,8 @@ func TestGin(t *testing.T) {
 	r := gin.New()
 	r.GET("/ping", func(c *gin.Context) {
 		fmt.Println("do1")
-		c.JSON(200, gin.H{
-			"message": "pong",
-		})
+
+		c.String(200, "i love you, Houmin")
 	})
 	r.GET("/hello2", func(c *gin.Context) {
 		fmt.Println("do2")

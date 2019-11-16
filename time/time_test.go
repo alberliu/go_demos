@@ -119,3 +119,7 @@ func TestTimeInt(t *testing.T) {
 
 	fmt.Println(time.Unix(0, t1.UnixNano()))
 }
+
+func TestFormatToDate(t *testing.T) {
+	fmt.Println(time.Now().Hour())
+}

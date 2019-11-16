@@ -1,26 +1,27 @@
 package sync
 
 import (
-	"testing"
-	"sync/atomic"
 	"fmt"
-	"sync"
+	"sync/atomic"
+	"testing"
 )
 
-func TestAtomic(t *testing.T){
-	var a int64=0
+type TokenBucket struct {
+	tokenNum int64     // 初始令牌数
+	c        chan int8 // 令牌缓冲区
+}
 
-	w:=sync.WaitGroup{}
-	w.Add(100)
-
-	for i:=0;i<100;i++{
-		go func(){
-			for j:=0;j<5;j++{
-				atomic.AddInt64(&a, 1)
-			}
-			w.Done()
-		}()
+func (b *TokenBucket) Get() {
+	num := atomic.LoadInt64(&b.tokenNum)
+	if num > 0 {
+		atomic.AddInt64(&b.tokenNum, -1)
+		b.c <- 1
 	}
-	w.Wait()
-	fmt.Println(a)
+
+}
+
+func TestAtomic(t *testing.T) {
+	c := make(chan int, 1)
+	c <- 1
+	fmt.Println(len(c))
 }
