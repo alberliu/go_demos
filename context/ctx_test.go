@@ -1,9 +1,9 @@
 package context
 
 import (
-	"testing"
 	"context"
 	"fmt"
+	"testing"
 	"time"
 )
 
@@ -61,4 +61,20 @@ func do(ctx context.Context) {
 func TestCtx2(t *testing.T) {
 	go CtxUse()
 	select {}
+}
+
+type A struct {
+	a int
+}
+
+type B struct {
+	A
+	b int
+}
+
+func TestS(t *testing.T) {
+	location, _ := time.LoadLocation("Local")
+	t1, _ := time.ParseInLocation("2006-01-02 15:04:05", "2019-05-04 00:00:00", location)
+	t2, _ := time.ParseInLocation("2006-01-02 15:04:05", "2019-05-04 00:00:00", location)
+	fmt.Println(t1.Equal(t2))
 }

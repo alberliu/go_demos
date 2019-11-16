@@ -40,11 +40,15 @@ func TestLogrotate(t *testing.T) {
 		MaxAge:     28, // days
 	})
 	core := zapcore.NewCore(
-		zapcore.NewConsoleEncoder(NewEncoderConfig()),
+		zapcore.NewJSONEncoder(NewEncoderConfig()),
 		zapcore.NewMultiWriteSyncer(zapcore.AddSync(os.Stdout),
 			w),
 		zap.DebugLevel,
 	)
 	logger := zap.New(core, zap.AddCaller())
 	logger.Info("info")
+}
+
+func TestZap(t *testing.T) {
+
 }

@@ -2,10 +2,10 @@ package grom
 
 import (
 	"fmt"
-	"testing"
-
+	_ "github.com/go-sql-driver/mysql"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
+	"testing"
 )
 
 type User struct {
@@ -23,7 +23,7 @@ type Book struct {
 }
 
 func initGORMDB() *gorm.DB {
-	db, err := gorm.Open("mysql", "root:Liu123456@tcp(localhost:3306)/test?charset=utf8")
+	db, err := gorm.Open("mysql", "root:liu123456@tcp(localhost:3306)/test?charset=utf8")
 	if err != nil {
 		panic("failed to connect database")
 	}
@@ -41,17 +41,6 @@ func TestInsert(t *testing.T) {
 	db = db.Create(&user2)
 	fmt.Println(db.Error)
 	fmt.Println(db.RowsAffected)
-}
-
-func TestUpdate(t *testing.T) {
-	db := initGORMDB()
-	err := db.Table("user").
-		Where("mobile = ?", 2).
-		Updates(map[string]interface{}{
-			"name": 2,
-			"age":  2,
-		}).Error
-	fmt.Println(err)
 }
 
 func TestInsertOneToMany(t *testing.T) {
@@ -102,10 +91,21 @@ func TestRows(t *testing.T) {
 
 func TestRow(t *testing.T) {
 	db := initGORMDB()
+	db.Begin()
 	var id int
 	err := db.Raw("SELECT id FROM pharmacist_goods WHERE id = ?", 1).Row().Scan(&id)
 	if err != nil {
 		fmt.Println(err)
 	}
 
+}
+
+func TestPluck(t *testing.T) {
+	db := initGORMDB()
+	var id []int
+	err := db.Table("user").Pluck("id", &id).Error
+	if err != nil {
+		fmt.Println(err)
+	}
+	fmt.Println(id)
 }

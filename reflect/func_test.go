@@ -1,12 +1,11 @@
 package reflect
 
 import (
-	"testing"
-	"reflect"
 	"fmt"
 	"github.com/json-iterator/go"
+	"reflect"
+	"testing"
 	"time"
-	"giftone/ico-audit/library"
 )
 
 type S1 struct {
@@ -68,9 +67,9 @@ func GetStrutsField(s interface{}) string {
 	t := reflect.TypeOf(s)
 	v := reflect.ValueOf(s)
 	for i := 0; i < t.NumField(); i++ {
-		name:=t.Field(i).Name
-		if  t.Field(i).Type.Name() == "Time" {
-			fieldStr += name + ": " + lib.FormatTime(v.Field(i).Interface().(time.Time)) + ""
+		name := t.Field(i).Name
+		if t.Field(i).Type.Name() == "Time" {
+			//fieldStr += name + ": " + lib.FormatTime(v.Field(i).Interface().(time.Time)) + ""
 			break
 		}
 		fieldStr += name + ": " + fmt.Sprint(v.Field(i).Interface()) + ""
@@ -79,8 +78,8 @@ func GetStrutsField(s interface{}) string {
 }
 
 func TestReflectCompare(a *testing.T) {
-	time1:=time.Now()
-	time2:=time.Now()
+	time1 := time.Now()
+	time2 := time.Now()
 	user1 := User{Id: 1, Name: "1", Now: time1}
 	user2 := User{Id: 6, Name: "1", Now: time2}
 	fmt.Println(GetStrutsFieldChange(user1, user2))
@@ -100,18 +99,15 @@ func GetStrutsFieldChange(s1, s2 interface{}) string {
 			continue
 		}
 
-
-
 		i1 := v1.Field(i).Interface()
 		i2 := v2.FieldByName(name).Interface()
 		if i1 != i2 {
-			if t1.Field(i).Type.Name() == "Time" || lib.FormatTime(i1.(time.Time))!= lib.FormatTime(i1.(time.Time)){
+			/*if t1.Field(i).Type.Name() == "Time" || lib.FormatTime(i1.(time.Time))!= lib.FormatTime(i1.(time.Time)){
 				change += name + ": " + lib.FormatTime(i1.(time.Time)) + " -> " + lib.FormatTime(i1.(time.Time)) + ""
 				continue
-			}
+			}*/
 			change += name + ": " + fmt.Sprint(i1) + " -> " + fmt.Sprint(i2) + ""
 		}
 	}
 	return change
 }
-
