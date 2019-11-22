@@ -34,7 +34,7 @@ func StreamServerInterceptor(srv interface{}, ss grpc.ServerStream, info *grpc.S
 
 type server struct{}
 
-const port = ":50001"
+const port = ":50002"
 
 func (s *server) SayHello(ctx context.Context, in *HelloRequest) (*HelloReply, error) {
 	md, ok := metadata.FromIncomingContext(ctx)
@@ -116,7 +116,7 @@ func TestClientWithContext(t *testing.T) {
 }
 
 func TestClientLB(t *testing.T) {
-	conn, err := grpc.DialContext(context.TODO(), "custom:///123456", grpc.WithInsecure(),
+	conn, err := grpc.DialContext(context.TODO(), "ips:///127.0.0.1:50000,127.0.0.1:50001,127.0.0.1:50002,", grpc.WithInsecure(),
 		grpc.WithDefaultServiceConfig(fmt.Sprintf(`{"LoadBalancingPolicy": "%s"}`, roundrobin.Name)))
 	if err != nil {
 		log.Fatalf("did not connect: %v", err)
