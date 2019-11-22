@@ -104,3 +104,7 @@ func TestTimeInt(t *testing.T) {
 func ReturnInt() []int {
 	return []int{}
 }
+
+func TestFormatToDate(t *testing.T) {
+	fmt.Println(time.Now().Hour())
+}
