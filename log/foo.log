@@ -1,0 +1,2 @@
+2019-11-15 14:17:16.940	INFO	log/zap_test.go:49	info
+{"L":"INFO","T":"2019-11-15 14:20:04.913","C":"log/zap_test.go:49","M":"info"}

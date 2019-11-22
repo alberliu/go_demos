@@ -4,27 +4,16 @@ import (
 	"context"
 	"fmt"
 	"google.golang.org/grpc"
-	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/balancer/roundrobin"
 	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
 	"log"
 	"net"
 	"testing"
+	"time"
 )
 
 // protoc --go_out=plugins=grpc:. *.proto
-
-type User struct {
-	Id int64
-}
-
-type server struct{}
-
-func (s *server) SayHello(ctx context.Context, in *HelloRequest) (*HelloReply, error) {
-	md, ok := metadata.FromIncomingContext(ctx)
-	fmt.Println("ctx", md, ok)
-	return nil, status.New(codes.Code(0), "error_").Err()
-}
 
 // 服务器端的单向调用的拦截器
 func UnaryServerInterceptor(ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (interface{}, error) {
@@ -43,8 +32,18 @@ func StreamServerInterceptor(srv interface{}, ss grpc.ServerStream, info *grpc.S
 	return err
 }
 
+type server struct{}
+
+const port = ":50001"
+
+func (s *server) SayHello(ctx context.Context, in *HelloRequest) (*HelloReply, error) {
+	md, ok := metadata.FromIncomingContext(ctx)
+	fmt.Println("ctx", md, ok)
+	return &HelloReply{Message: port}, nil
+}
+
 func TestServer(t *testing.T) {
-	lis, err := net.Listen("tcp", ":50000")
+	lis, err := net.Listen("tcp", port)
 
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)
@@ -57,27 +56,76 @@ func TestServer(t *testing.T) {
 	s.Serve(lis)
 }
 
-func TestClient(t *testing.T) {
-	conn, err := grpc.Dial("127.0.0.1:50000", grpc.WithInsecure())
+func TestClientNginxProxy(t *testing.T) {
+	conn, err := grpc.Dial("localhost:80", grpc.WithInsecure())
+	if err != nil {
+		log.Fatalf("did not connect: %v", err)
+	}
+	defer conn.Close()
+
+	c := NewGreeterClient(conn)
+	fmt.Println(c.SayHello(metadata.NewOutgoingContext(context.TODO(), metadata.Pairs("key", "val")), &HelloRequest{Name: "hello"}))
+	fmt.Println(c.SayHello(metadata.NewOutgoingContext(context.TODO(), metadata.Pairs("key", "val")), &HelloRequest{Name: "hello"}))
+	fmt.Println(c.SayHello(metadata.NewOutgoingContext(context.TODO(), metadata.Pairs("key", "val")), &HelloRequest{Name: "hello"}))
+	fmt.Println(c.SayHello(metadata.NewOutgoingContext(context.TODO(), metadata.Pairs("key", "val")), &HelloRequest{Name: "hello"}))
+	fmt.Println(c.SayHello(metadata.NewOutgoingContext(context.TODO(), metadata.Pairs("key", "val")), &HelloRequest{Name: "hello"}))
+	fmt.Println(c.SayHello(metadata.NewOutgoingContext(context.TODO(), metadata.Pairs("key", "val")), &HelloRequest{Name: "hello"}))
+	fmt.Println(c.SayHello(metadata.NewOutgoingContext(context.TODO(), metadata.Pairs("key", "val")), &HelloRequest{Name: "hello"}))
+	fmt.Println(c.SayHello(metadata.NewOutgoingContext(context.TODO(), metadata.Pairs("key", "val")), &HelloRequest{Name: "hello"}))
+	fmt.Println(c.SayHello(metadata.NewOutgoingContext(context.TODO(), metadata.Pairs("key", "val")), &HelloRequest{Name: "hello"}))
+	fmt.Println(c.SayHello(metadata.NewOutgoingContext(context.TODO(), metadata.Pairs("key", "val")), &HelloRequest{Name: "hello"}))
+	fmt.Println(c.SayHello(metadata.NewOutgoingContext(context.TODO(), metadata.Pairs("key", "val")), &HelloRequest{Name: "hello"}))
+	fmt.Println(c.SayHello(metadata.NewOutgoingContext(context.TODO(), metadata.Pairs("key", "val")), &HelloRequest{Name: "hello"}))
+}
+
+func TestClientStatus(t *testing.T) {
+	conn, err := grpc.Dial("localhost:80", grpc.WithInsecure())
 
 	if err != nil {
 		log.Fatalf("did not connect: %v", err)
 	}
-
 	defer conn.Close()
 
 	c := NewGreeterClient(conn)
-	r, err := c.SayHello(metadata.NewOutgoingContext(context.TODO(), metadata.Pairs("key", "val")), &HelloRequest{Name: "hello"})
+	resp, err := c.SayHello(metadata.NewOutgoingContext(context.TODO(), metadata.Pairs("key", "val")), &HelloRequest{Name: "hello"})
 
 	s, ok := status.FromError(err)
 	fmt.Println(ok)
-	fmt.Println(s.Code())
-	fmt.Println(s.Message())
+	fmt.Println("code", s.Code())
+	fmt.Println("message", s.Message())
 	fmt.Println(s.Details())
 
 	if err != nil {
 		fmt.Println(err)
 	}
 
-	fmt.Println(r)
+	fmt.Println(resp)
+}
+
+func TestClientWithContext(t *testing.T) {
+	conn, err := grpc.DialContext(context.TODO(), "custom///123456", grpc.WithInsecure(),
+		grpc.WithDefaultServiceConfig(fmt.Sprintf(`{"LoadBalancingPolicy": "%s"}`, roundrobin.Name)))
+	if err != nil {
+		log.Fatalf("did not connect: %v", err)
+	}
+	defer conn.Close()
+
+	c := NewGreeterClient(conn)
+	fmt.Println(c.SayHello(metadata.NewOutgoingContext(context.TODO(), metadata.Pairs("key", "val")), &HelloRequest{Name: "hello"}))
+
+}
+
+func TestClientLB(t *testing.T) {
+	conn, err := grpc.DialContext(context.TODO(), "custom:///123456", grpc.WithInsecure(),
+		grpc.WithDefaultServiceConfig(fmt.Sprintf(`{"LoadBalancingPolicy": "%s"}`, roundrobin.Name)))
+	if err != nil {
+		log.Fatalf("did not connect: %v", err)
+	}
+	defer conn.Close()
+
+	c := NewGreeterClient(conn)
+	for {
+		time.Sleep(1 * time.Second)
+		fmt.Println(c.SayHello(metadata.NewOutgoingContext(context.TODO(), metadata.Pairs("key", "val")), &HelloRequest{Name: "hello"}))
+	}
 }

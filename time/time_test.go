@@ -95,7 +95,10 @@ func TestTicker(t *testing.T) {
 }
 
 func TestTimeInt(t *testing.T) {
-	fmt.Println(ReturnInt() == nil)
+	a := time.Now().UnixNano()
+	time.Sleep(3 * time.Second)
+	b := time.Now().UnixNano()
+	fmt.Println(b - a)
 }
 
 func ReturnInt() []int {
