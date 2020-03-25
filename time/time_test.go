@@ -2,6 +2,7 @@ package time_test
 
 import (
 	"fmt"
+	"strings"
 	"testing"
 	"time"
 )
@@ -106,5 +107,5 @@ func ReturnInt() []int {
 }
 
 func TestFormatToDate(t *testing.T) {
-	fmt.Println(time.Now().Hour())
+	fmt.Println(strings.Replace("2020-03-24-17-12-18.122", ".", "-", -1))
 }

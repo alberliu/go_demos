@@ -1,19 +1,17 @@
 package tcp
 
-import (
+/*import (
+	"golang.org/x/sys/unix"
 	"log"
 	"net"
 	"reflect"
 	"sync"
-	"syscall"
-
-	"golang.org/x/sys/unix"
 )
 
 type epoll struct {
-	fd          int
-	connections map[int]net.Conn
-	lock        *sync.RWMutex
+	fd    int
+	conns map[int]net.Conn
+	lock  *sync.RWMutex
 }
 
 func MkEpoll() (*epoll, error) {
@@ -22,9 +20,9 @@ func MkEpoll() (*epoll, error) {
 		return nil, err
 	}
 	return &epoll{
-		fd:          fd,
-		lock:        &sync.RWMutex{},
-		connections: make(map[int]net.Conn),
+		fd:    fd,
+		lock:  &sync.RWMutex{},
+		conns: make(map[int]net.Conn),
 	}, nil
 }
 
@@ -37,8 +35,8 @@ func (e *epoll) Add(conn net.Conn) error {
 	}
 	e.lock.Lock()
 	defer e.lock.Unlock()
-	e.connections[fd] = conn
-	if len(e.connections)%100 == 0 {
+	e.conns[fd] = conn
+	if len(e.conns)%100 == 0 {
 		log.Printf("total number of connections: %v", len(e.connections))
 	}
 	return nil
@@ -52,8 +50,8 @@ func (e *epoll) Remove(conn net.Conn) error {
 	}
 	e.lock.Lock()
 	defer e.lock.Unlock()
-	delete(e.connections, fd)
-	if len(e.connections)%100 == 0 {
+	delete(e.conns, fd)
+	if len(e.conns)%100 == 0 {
 		log.Printf("total number of connections: %v", len(e.connections))
 	}
 	return nil
@@ -75,10 +73,10 @@ func (e *epoll) Wait() ([]net.Conn, error) {
 	return connections, nil
 }
 
-func socketFD(conn net.Conn) int {
+//
+func Sysfd(conn net.Conn) int {
 	tcpConn := reflect.Indirect(reflect.ValueOf(conn)).FieldByName("conn")
 	fdVal := tcpConn.FieldByName("fd")
 	pfdVal := reflect.Indirect(fdVal).FieldByName("pfd")
-
 	return int(pfdVal.FieldByName("Sysfd").Int())
-}
+}*/
