@@ -1,11 +1,13 @@
+// +build linux
+
 package tcp
 
-/*import (
+import (
 	"golang.org/x/sys/unix"
 	"log"
 	"net"
-	"reflect"
 	"sync"
+	"syscall"
 )
 
 type epoll struct {
@@ -14,7 +16,7 @@ type epoll struct {
 	lock  *sync.RWMutex
 }
 
-func MkEpoll() (*epoll, error) {
+func EpollCreate() (*epoll, error) {
 	fd, err := unix.EpollCreate1(0)
 	if err != nil {
 		return nil, err
@@ -26,10 +28,13 @@ func MkEpoll() (*epoll, error) {
 	}, nil
 }
 
-func (e *epoll) Add(conn net.Conn) error {
-	// Extract file descriptor associated with the connection
-	fd := socketFD(conn)
-	err := unix.EpollCtl(e.fd, syscall.EPOLL_CTL_ADD, fd, &unix.EpollEvent{Events: unix.POLLIN | unix.POLLHUP, Fd: int32(fd)})
+func (e *epoll) Add(conn net.TCPConn) error {
+	file, err := conn.File()
+	if err != nil {
+		return err
+	}
+
+	err = unix.EpollCtl(e.fd, syscall.EPOLL_CTL_ADD, fd, &unix.EpollEvent{Events: unix.POLLIN | unix.POLLHUP, Fd: int32(file.Fd())})
 	if err != nil {
 		return err
 	}
@@ -42,7 +47,7 @@ func (e *epoll) Add(conn net.Conn) error {
 	return nil
 }
 
-func (e *epoll) Remove(conn net.Conn) error {
+func (e *epoll) Remove(conn net.TCPConn) error {
 	fd := socketFD(conn)
 	err := unix.EpollCtl(e.fd, syscall.EPOLL_CTL_DEL, fd, nil)
 	if err != nil {
@@ -57,7 +62,7 @@ func (e *epoll) Remove(conn net.Conn) error {
 	return nil
 }
 
-func (e *epoll) Wait() ([]net.Conn, error) {
+func (e *epoll) Wait() ([]net.TCPConn, error) {
 	events := make([]unix.EpollEvent, 100)
 	n, err := unix.EpollWait(e.fd, events, 100)
 	if err != nil {
@@ -72,11 +77,3 @@ func (e *epoll) Wait() ([]net.Conn, error) {
 	}
 	return connections, nil
 }
-
-//
-func Sysfd(conn net.Conn) int {
-	tcpConn := reflect.Indirect(reflect.ValueOf(conn)).FieldByName("conn")
-	fdVal := tcpConn.FieldByName("fd")
-	pfdVal := reflect.Indirect(fdVal).FieldByName("pfd")
-	return int(pfdVal.FieldByName("Sysfd").Int())
-}*/
