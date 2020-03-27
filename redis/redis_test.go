@@ -1,9 +1,9 @@
 package redis
 
 import (
-	"testing"
-	"github.com/go-redis/redis"
 	"fmt"
+	"github.com/go-redis/redis"
+	"testing"
 	"time"
 )
 
@@ -17,25 +17,32 @@ func init() {
 	})
 }
 
-func TestRedis(t *testing.T){
-	b,err := client.SetNX("key", "value", 6*time.Second).Result()
-	fmt.Println(b,err)
+func TestRedis(t *testing.T) {
+	b, err := client.SetNX("key", "value", 6*time.Second).Result()
+	fmt.Println(b, err)
 
-	time.Sleep(3*time.Second)
-	b,err = client.SetNX("key", "value", 6*time.Second).Result()
-	fmt.Println(b,err)
+	time.Sleep(3 * time.Second)
+	b, err = client.SetNX("key", "value", 6*time.Second).Result()
+	fmt.Println(b, err)
 
-	time.Sleep(3*time.Second)
-	b,err = client.SetNX("key", "value", 6*time.Second).Result()
-	fmt.Println(b,err)
+	time.Sleep(3 * time.Second)
+	b, err = client.SetNX("key", "value", 6*time.Second).Result()
+	fmt.Println(b, err)
 
 }
 
-func TestPanic(t *testing.T){
-	defer fmt.Println("defer")
-	A()
-}
-
-func A(){
-	panic("panic")
+/**
+POLLIN   = 0x1
+	POLLPRI  = 0x2
+	POLLOUT  = 0x4
+	POLLERR  = 0x8
+	POLLHUP  = 0x10
+	POLLNVAL = 0x20
+*/
+func TestPanic(t *testing.T) {
+	fmt.Printf("%b\n", 0x1|0x2)
+	fmt.Printf("%b\n", 0x2)
+	fmt.Printf("%b\n", 0x8)
+	fmt.Printf("%b\n", 0x10)
+	fmt.Printf("%b\n", 0x20)
 }

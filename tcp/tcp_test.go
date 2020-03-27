@@ -37,6 +37,7 @@ func HandlerConn(conn net.Conn) {
 			fmt.Println(err)
 			return
 		}
+		conn.Close()
 		fmt.Printf("Received data: %v \n", string(buf[:n]))
 
 		n, err = conn.Write(buf[:n])
