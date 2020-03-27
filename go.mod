@@ -20,15 +20,14 @@ require (
 	github.com/golang/protobuf v1.3.3
 	github.com/jinzhu/gorm v1.9.12
 	github.com/json-iterator/go v1.1.9
-	github.com/kavu/go_reuseport v1.5.0 // indirect
 	github.com/nsqio/go-nsq v1.0.8
 	github.com/onsi/ginkgo v1.12.0 // indirect
 	github.com/onsi/gomega v1.9.0 // indirect
+	github.com/panjf2000/gnet v0.0.1-rc.4
 	github.com/robfig/cron v1.2.0
 	github.com/satori/go.uuid v1.2.0
 	github.com/shiena/ansicolor v0.0.0-20151119151921-a422bbe96644 // indirect
 	github.com/tealeg/xlsx v1.0.5 // indirect
-	github.com/tidwall/evio v1.0.7
 	github.com/xormplus/builder v0.0.0-20200306092541-e066fb7511c8 // indirect
 	github.com/xormplus/core v0.0.0-20200308074340-f3bce19d5f31 // indirect
 	github.com/xormplus/xorm v0.0.0-20200312060401-935be4f0f832
