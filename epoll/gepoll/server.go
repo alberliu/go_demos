@@ -5,6 +5,7 @@ import (
 	"log"
 	"net"
 	"os"
+	"syscall"
 )
 
 type server struct {
@@ -72,9 +73,11 @@ func (s *server) Run() {
 				s.handler.OnConnect(nfd)
 			} else {
 				bytes := make([]byte, 100)
-				n, err := unix.Read(int(events[i].Fd), bytes)
+				n, err := syscall.Read(int(events[i].Fd), bytes)
 				if n == 0 || err != nil {
 					log.Println("read_error:", n, err)
+					if n==0 &&
+
 					err := s.epoll.Remove(int(events[i].Fd))
 					if err != nil {
 						log.Println(err)
@@ -89,6 +92,7 @@ func (s *server) Run() {
 				}
 				s.handler.OnMessage(int(events[i].Fd), bytes[0:n])
 			}
+			// time.Sleep(2*time.Second)
 		}
 	}
 }

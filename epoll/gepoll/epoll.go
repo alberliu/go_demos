@@ -5,7 +5,6 @@ package gepoll
 import (
 	"golang.org/x/sys/unix"
 	"log"
-	"os"
 	"syscall"
 )
 
@@ -65,44 +64,4 @@ func (e *epoll) EpollWait() ([]unix.EpollEvent, error) {
 	}
 	log.Println("wait end")
 	return events[0:n], nil
-
-	for i := 0; i < n; i++ {
-		log.Println(events[i].Fd, events[i].Events, events[i].Pad)
-		if events[i].Fd == int32(e.lfd) {
-			log.Println("accept", events[i].Fd)
-			nfd, _, err := unix.Accept(int(events[i].Fd))
-			if err != nil {
-				log.Println(err)
-				continue
-			}
-
-			e.AddRead(nfd)
-
-			// 可以确定，是阻塞调用的
-			n, err := unix.Write(nfd, make([]byte, 1024*1024*1024))
-			if err != nil {
-				log.Println(err)
-				return
-			}
-			log.Println("write:", n)
-
-		} else {
-			bytes := make([]byte, 100)
-			n, err := unix.Read(int(events[i].Fd), bytes)
-			if n == 0 || err != nil {
-				log.Println("read_error:", n, err)
-				err := e.Remove(int(events[i].Fd))
-				if err != nil {
-					log.Println(err)
-				}
-
-				err = os.NewFile(uintptr(events[i].Fd), "").Close()
-				if err != nil {
-					log.Println(err)
-				}
-				continue
-			}
-			log.Println("read:", string(bytes[0:n]))
-		}
-	}
 }
