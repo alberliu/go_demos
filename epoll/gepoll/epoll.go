@@ -5,6 +5,7 @@ package gepoll
 import (
 	"golang.org/x/sys/unix"
 	"log"
+	"os"
 	"syscall"
 )
 
@@ -46,9 +47,16 @@ func (e *epoll) AddRead(fd int) error {
 }
 
 func (e *epoll) Remove(fd int) error {
+	// 移除文件描述符的监听
 	err := unix.EpollCtl(e.fd, syscall.EPOLL_CTL_DEL, fd, nil)
 	if err != nil {
 		return err
+	}
+
+	// 关闭文件描述符
+	err = os.NewFile(uintptr(fd), "").Close()
+	if err != nil {
+		log.Println(err)
 	}
 
 	return nil

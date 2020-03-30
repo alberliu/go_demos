@@ -4,7 +4,6 @@ import (
 	"golang.org/x/sys/unix"
 	"log"
 	"net"
-	"os"
 	"syscall"
 )
 
@@ -76,17 +75,12 @@ func (s *server) Run() {
 				n, err := syscall.Read(int(events[i].Fd), bytes)
 				if n == 0 || err != nil {
 					log.Println("read_error:", n, err)
-					if n==0 &&
 
 					err := s.epoll.Remove(int(events[i].Fd))
 					if err != nil {
 						log.Println(err)
 					}
 
-					err = os.NewFile(uintptr(events[i].Fd), "").Close()
-					if err != nil {
-						log.Println(err)
-					}
 					s.handler.OnClose(int(events[i].Fd))
 					continue
 				}
