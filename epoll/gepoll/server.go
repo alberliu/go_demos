@@ -7,6 +7,9 @@ import (
 	"syscall"
 )
 
+// eventQueue 全局事件队列
+var eventQueue = make(chan unix.EpollEvent, 1000)
+
 type server struct {
 	epoll   *epoll
 	handler Handler
@@ -51,42 +54,69 @@ func NewServer(address string, handler Handler) (*server, error) {
 
 // Run 启动服务
 func (s *server) Run() {
+	s.StartConsumer()
+	s.StartProducer()
+}
+
+// StartProducer 启动生产者
+func (s *server) StartProducer() {
 	for {
-		events, err := s.epoll.EpollWait()
-		if err != nil {
-			log.Println(err)
-			continue
-		}
+		s.epoll.EpollWait()
+	}
+}
 
-		for i := range events {
-			log.Println(events[i].Fd, events[i].Events, events[i].Pad)
-			if events[i].Fd == int32(s.epoll.lfd) {
-				log.Println("accept", events[i].Fd)
-				nfd, _, err := unix.Accept(int(events[i].Fd))
-				if err != nil {
-					log.Println(err)
-					continue
-				}
+// StartConsumer 启动消费者
+func (s *server) StartConsumer() {
+	go s.Consume()
+}
 
-				s.epoll.AddRead(nfd)
-				s.handler.OnConnect(nfd)
-			} else {
-				bytes := make([]byte, 100)
-				n, err := syscall.Read(int(events[i].Fd), bytes)
-				if n == 0 || err != nil {
-					log.Println("read_error:", n, err)
-
-					err := s.epoll.Remove(int(events[i].Fd))
-					if err != nil {
-						log.Println(err)
-					}
-
-					s.handler.OnClose(int(events[i].Fd))
-					continue
-				}
-				s.handler.OnMessage(int(events[i].Fd), bytes[0:n])
+// Consume 消费者
+func (s *server) Consume() {
+	for event := range eventQueue {
+		log.Println(event.Fd, event.Events, event.Pad)
+		if event.Fd == int32(s.epoll.lfd) {
+			log.Println("accept", event.Fd)
+			nfd, _, err := unix.Accept(int(event.Fd))
+			if err != nil {
+				log.Println(err)
+				return
 			}
-			// time.Sleep(2*time.Second)
+
+			s.epoll.AddRead(nfd)
+			conn := newConn(nfd)
+			conns.Store(nfd, conn)
+			s.handler.OnConnect(conn)
+			return
 		}
+
+		bytes := make([]byte, 100)
+		n, err := syscall.Read(int(event.Fd), bytes)
+		if n == 0 || err != nil {
+			log.Println("read_error:", n, err)
+
+			if err == syscall.EAGAIN {
+				return
+			}
+			err := s.epoll.Remove(int(event.Fd))
+			if err != nil {
+				log.Println(err)
+			}
+
+			c, ok := conns.Load(event.Fd)
+			if !ok {
+				log.Println("not found in conns,", event.Fd)
+				return
+			}
+
+			s.handler.OnClose(c.(*Conn))
+			return
+		}
+
+		c, ok := conns.Load(event.Fd)
+		if !ok {
+			log.Println("not found in conns,", event.Fd)
+			return
+		}
+		s.handler.OnMessage(c.(*Conn), bytes[0:n])
 	}
 }

@@ -2,7 +2,6 @@ package time_test
 
 import (
 	"fmt"
-	"strings"
 	"testing"
 	"time"
 )
@@ -107,5 +106,19 @@ func ReturnInt() []int {
 }
 
 func TestFormatToDate(t *testing.T) {
-	fmt.Println(strings.Replace("2020-03-24-17-12-18.122", ".", "-", -1))
+	fmt.Println(dive100(1))
+	fmt.Println(dive100(30))
+	fmt.Println(dive100(100))
+	fmt.Println(dive100(1000))
+	fmt.Println(dive100(1))
+}
+
+func dive100(i int64) string {
+	z := i / 100
+	y := i % 100
+	if y < 10 {
+		return fmt.Sprintf("%d.0%d", z, y)
+	} else {
+		return fmt.Sprintf("%d.%d", z, y)
+	}
 }

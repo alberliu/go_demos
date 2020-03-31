@@ -8,19 +8,19 @@ import (
 type Handler struct {
 }
 
-func (Handler) OnConnect(fd int) {
-
+func (Handler) OnConnect(c *gepoll.Conn) {
+	log.Println("connect:", c)
 }
-func (Handler) OnMessage(fd int, message interface{}) {
-	log.Println("read:", fd, string(message.([]byte)))
+func (Handler) OnMessage(c *gepoll.Conn, message interface{}) {
+	log.Println("read:", c, string(message.([]byte)))
 }
 
-func (Handler) OnError(fd int, err error) {
+func (Handler) OnError(c *gepoll.Conn, err error) {
 	log.Println(err)
 }
 
-func (Handler) OnClose(fd int) {
-
+func (Handler) OnClose(c *gepoll.Conn) {
+	log.Println("close:", c)
 }
 
 func main() {

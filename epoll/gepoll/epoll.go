@@ -62,14 +62,17 @@ func (e *epoll) Remove(fd int) error {
 	return nil
 }
 
-func (e *epoll) EpollWait() ([]unix.EpollEvent, error) {
+func (e *epoll) EpollWait() {
 	log.Println("wait start")
 	events := make([]unix.EpollEvent, 100)
 	n, err := unix.EpollWait(e.fd, events, -1)
 	if err != nil {
 		log.Println(err)
-		return nil, err
+		return
 	}
 	log.Println("wait end")
-	return events[0:n], nil
+
+	for i := 0; i < n; i++ {
+		eventQueue <- events[i]
+	}
 }
