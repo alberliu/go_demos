@@ -1,12 +1,12 @@
 // +build linux
 
-package gepoll
+package ge
 
 import (
 	"golang.org/x/sys/unix"
 	"log"
-	"os"
 	"syscall"
+	"time"
 )
 
 const PollAll = unix.POLLIN | unix.POLLPRI | unix.POLLERR | unix.POLLHUP | unix.POLLNVAL
@@ -17,7 +17,7 @@ type epoll struct {
 }
 
 func EpollCreate() (*epoll, error) {
-	fd, err := unix.EpollCreate1(0)
+	fd, err := syscall.EpollCreate1(0)
 	if err != nil {
 		return nil, err
 	}
@@ -27,7 +27,7 @@ func EpollCreate() (*epoll, error) {
 }
 
 func (e *epoll) AddListener(fd int) error {
-	err := unix.EpollCtl(e.fd, syscall.EPOLL_CTL_ADD, int(fd), &unix.EpollEvent{Events: unix.POLLIN | unix.POLLHUP, Fd: int32(fd)})
+	err := syscall.EpollCtl(e.fd, syscall.EPOLL_CTL_ADD, int(fd), &syscall.EpollEvent{Events: unix.POLLIN | unix.POLLHUP, Fd: int32(fd)})
 	if err != nil {
 		return err
 	}
@@ -36,7 +36,7 @@ func (e *epoll) AddListener(fd int) error {
 }
 
 func (e *epoll) AddRead(fd int) error {
-	err := unix.EpollCtl(e.fd, syscall.EPOLL_CTL_ADD, int(fd), &unix.EpollEvent{
+	err := syscall.EpollCtl(e.fd, syscall.EPOLL_CTL_ADD, int(fd), &syscall.EpollEvent{
 		Events: PollAll,
 		Fd:     int32(fd),
 	})
@@ -46,31 +46,32 @@ func (e *epoll) AddRead(fd int) error {
 	return nil
 }
 
-func (e *epoll) Remove(fd int) error {
+func (e *epoll) RemoveAndClose(fd int) error {
 	// 移除文件描述符的监听
-	err := unix.EpollCtl(e.fd, syscall.EPOLL_CTL_DEL, fd, nil)
+	err := syscall.EpollCtl(e.fd, syscall.EPOLL_CTL_DEL, fd, nil)
 	if err != nil {
 		return err
 	}
 
-	// 关闭文件描述符
-	err = os.NewFile(uintptr(fd), "").Close()
+	err = syscall.Close(fd)
 	if err != nil {
 		log.Println(err)
+		return err
 	}
 
 	return nil
 }
 
-func (e *epoll) EpollWait() {
+func (e *epoll) EpollWait(eventQueue chan syscall.EpollEvent) {
 	log.Println("wait start")
-	events := make([]unix.EpollEvent, 100)
-	n, err := unix.EpollWait(e.fd, events, -1)
+	time.Sleep(time.Second)
+	events := make([]syscall.EpollEvent, 100)
+	n, err := syscall.EpollWait(e.fd, events, -1)
 	if err != nil {
 		log.Println(err)
 		return
 	}
-	log.Println("wait end")
+	log.Println("wait end", n)
 
 	for i := 0; i < n; i++ {
 		eventQueue <- events[i]

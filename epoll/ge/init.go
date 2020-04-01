@@ -1,4 +1,4 @@
-package gepoll
+package ge
 
 import "log"
 

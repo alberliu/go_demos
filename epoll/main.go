@@ -1,34 +1,30 @@
 package main
 
 import (
-	"go_demos/epoll/gepoll"
+	"go_demos/epoll/ge"
 	"log"
+	"time"
 )
 
 type Handler struct {
 }
 
-func (Handler) OnConnect(c *gepoll.Conn) {
-	log.Println("connect:", c)
+func (Handler) OnConnect(c *ge.Conn) {
+	log.Println("connect:", c.GetFd())
 }
-func (Handler) OnMessage(c *gepoll.Conn, message interface{}) {
-	log.Println("read:", c, string(message.([]byte)))
+func (Handler) OnMessage(c *ge.Conn, message interface{}) {
+	log.Println("read:", c.GetFd(), string(message.([]byte)))
 }
-
-func (Handler) OnError(c *gepoll.Conn, err error) {
-	log.Println(err)
-}
-
-func (Handler) OnClose(c *gepoll.Conn) {
-	log.Println("close:", c)
+func (Handler) OnClose(c *ge.Conn) {
+	log.Println("close:", c.GetFd())
 }
 
 func main() {
-	server, err := gepoll.NewServer(":8080", &Handler{})
+	server, err := ge.NewServer(":8080", &Handler{})
 	if err != nil {
 		log.Panicln("err")
 		return
 	}
-
+	server.SetTimeout(1*time.Second, 5*time.Second)
 	server.Run()
 }
