@@ -2,7 +2,7 @@ package ge
 
 import (
 	"errors"
-	"io"
+	"syscall"
 )
 
 var (
@@ -35,11 +35,11 @@ func (b *buffer) grow() {
 	b.start = 0
 }
 
-// readFromReader 从reader里面读取数据，如果reader阻塞，会发生阻塞
-func (b *buffer) readFromReader(reader io.Reader) (int, error) {
+// readFromFile 从文件描述符里面读取数据，如果reader阻塞，会发生阻塞
+func (b *buffer) readFromFile(fd int32) (int, error) {
 	b.grow()
-	n, err := reader.Read(b.buf[b.end:])
-	if err != nil {
+	n, err := syscall.Read(int(fd), b.buf[b.end:])
+	if n == 0 || err != nil {
 		return n, err
 	}
 	b.end += n
