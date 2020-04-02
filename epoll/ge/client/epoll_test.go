@@ -5,6 +5,7 @@ import (
 	"log"
 	"net"
 	"testing"
+	"time"
 )
 
 func init() {
@@ -37,6 +38,9 @@ func TestEpoll_Client(t *testing.T) {
 			log.Println("read:", string(bytes[0:n]))
 		}
 	}()
+
+	time.Sleep(time.Second * 2)
+	conn.Close()
 
 	select {}
 }

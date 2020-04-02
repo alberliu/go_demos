@@ -1,9 +1,8 @@
-package ge
+package codec
 
 import (
 	"errors"
 	"io"
-	"log"
 	"syscall"
 )
 
@@ -11,24 +10,24 @@ var (
 	ErrNotEnough = errors.New("not enough")
 )
 
-// buffer 读缓冲区,每个tcp长连接对应一个读缓冲区
-type buffer struct {
+// Buffer 读缓冲区,每个tcp长连接对应一个读缓冲区
+type Buffer struct {
 	buf   []byte // 应用内缓存区
 	start int    // 有效字节开始位置
 	end   int    // 有效字节结束位置
 }
 
-// newBuffer 创建一个缓存区
-func newBuffer(bytes []byte) buffer {
-	return buffer{bytes, 0, 0}
+// NewBuffer 创建一个缓存区
+func NewBuffer(bytes []byte) *Buffer {
+	return &Buffer{bytes, 0, 0}
 }
 
-func (b *buffer) len() int {
+func (b *Buffer) Len() int {
 	return b.end - b.start
 }
 
 // grow 将有效的字节前移
-func (b *buffer) grow() {
+func (b *Buffer) grow() {
 	if b.start == 0 {
 		return
 	}
@@ -38,11 +37,9 @@ func (b *buffer) grow() {
 }
 
 // readFromFile 从文件描述符里面读取数据，如果reader阻塞，会发生阻塞
-func (b *buffer) readFromFile(fd int32) error {
+func (b *Buffer) ReadFromFile(fd int32) error {
 	b.grow()
 	n, err := syscall.Read(int(fd), b.buf[b.end:])
-	log.Println("readFromFile", n, err)
-
 	if n == 0 || err != nil {
 		if err == syscall.EAGAIN {
 			return nil
@@ -58,7 +55,7 @@ func (b *buffer) readFromFile(fd int32) error {
 }
 
 // seek 返回n个字节，而不产生移位，如果没有足够字节，返回错误
-func (b *buffer) seek(start, end int) ([]byte, error) {
+func (b *Buffer) Seek(start, end int) ([]byte, error) {
 	if b.end-b.start >= end-start {
 		buf := b.buf[b.start+start : b.start+end]
 		return buf, nil
@@ -67,12 +64,17 @@ func (b *buffer) seek(start, end int) ([]byte, error) {
 }
 
 // read 舍弃offset个字段，读取n个字段,如果没有足够的字节，返回错误
-func (b *buffer) read(offset, limit int) ([]byte, error) {
-	if b.len() < offset+limit {
+func (b *Buffer) Read(offset, limit int) ([]byte, error) {
+	if b.Len() < offset+limit {
 		return nil, ErrNotEnough
 	}
 	b.start += offset
 	buf := b.buf[b.start : b.start+limit]
 	b.start += limit
 	return buf, nil
+}
+
+// Get 获取buffer中的字节数组，不改变Buffer中的字节流
+func (b *Buffer) Get() []byte {
+	return b.buf[b.start:b.end]
 }

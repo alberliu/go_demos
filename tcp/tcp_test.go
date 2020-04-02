@@ -30,6 +30,7 @@ func TestServer(t *testing.T) {
 }
 
 func HandlerConn(conn net.Conn) {
+	conn.RemoteAddr()
 	buf := make([]byte, 10)
 	for {
 		n, err := conn.Read(buf)

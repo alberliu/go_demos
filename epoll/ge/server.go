@@ -45,8 +45,6 @@ func NewServer(address string, handler Handler) (*server, error) {
 		return nil, err
 	}
 
-	log.Println("listener_fd:", file.Fd())
-
 	e, err := EpollCreate()
 	if err != nil {
 		log.Println(err)
@@ -107,10 +105,8 @@ func (s *server) startConsumer() {
 // Consume 消费者
 func (s *server) consume() {
 	for event := range s.eventQueue {
-		log.Println("event:", event.Fd, event.Events, event.Pad)
 		// 客户端请求建立连接
 		if event.Fd == int32(s.epoll.lfd) {
-			log.Println("accept", event.Fd)
 			nfd, _, err := syscall.Accept(int(event.Fd))
 			if err != nil {
 				log.Println(err)
@@ -136,7 +132,7 @@ func (s *server) consume() {
 			if err == io.EOF {
 				c.Close()
 				s.handler.OnClose(c)
-				return
+				continue
 			}
 			log.Println(err)
 		}

@@ -5,7 +5,6 @@ import (
 	"sync"
 	"sync/atomic"
 	"testing"
-	"time"
 )
 
 func TestAtomic(t *testing.T) {
@@ -27,21 +26,9 @@ func TestAtomic(t *testing.T) {
 }
 
 func TestRWMutex(t *testing.T) {
-	i := 0
-	go func() {
-		for {
-			time.Sleep(time.Second)
-			i++
-			fmt.Println("i++", i)
-		}
-	}()
-
-	go func() {
-		for {
-			time.Sleep(time.Second)
-			fmt.Println("i=", i)
-		}
-	}()
-
-	select {}
+	var m sync.Mutex
+	m.Lock()
+	fmt.Println(1)
+	m.Lock()
+	fmt.Println(2)
 }

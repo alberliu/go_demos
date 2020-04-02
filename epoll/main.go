@@ -20,11 +20,13 @@ func (Handler) OnClose(c *ge.Conn) {
 }
 
 func main() {
+	log.SetFlags(log.Ldate | log.Ltime | log.Lshortfile)
+
 	server, err := ge.NewServer(":8080", &Handler{})
 	if err != nil {
 		log.Panicln("err")
 		return
 	}
-	server.SetTimeout(1*time.Second, 5*time.Second)
+	server.SetTimeout(1*time.Minute, 5*time.Minute)
 	server.Run()
 }
