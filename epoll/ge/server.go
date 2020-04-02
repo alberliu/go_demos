@@ -1,6 +1,7 @@
 package ge
 
 import (
+	"io"
 	"log"
 	"net"
 	"sync"
@@ -11,10 +12,11 @@ import (
 // Handler Server 注册接口
 type Handler interface {
 	OnConnect(c *Conn)
-	OnMessage(c *Conn, message interface{})
+	OnMessage(c *Conn, bytes []byte)
 	OnClose(c *Conn)
 }
 
+// server TCP服务
 type server struct {
 	epoll         *epoll                  // 系统相关网络模型
 	handler       Handler                 // 注册的处理
@@ -129,21 +131,15 @@ func (s *server) consume() {
 		}
 		c := v.(*Conn)
 
-		bytes := make([]byte, 100)
-		n, err := c.Read(bytes)
-
-		if n == 0 || err != nil {
-			log.Println("read_error:", n, err)
-			if err == syscall.EAGAIN {
-				continue
+		err := c.Read()
+		if err != nil {
+			if err == io.EOF {
+				c.Close()
+				s.handler.OnClose(c)
+				return
 			}
-
-			c.Close()
-			s.handler.OnClose(c)
-			continue
+			log.Println(err)
 		}
-		log.Println("can read;", event.Fd, s.conns)
-		s.handler.OnMessage(c, bytes[0:n])
 	}
 }
 

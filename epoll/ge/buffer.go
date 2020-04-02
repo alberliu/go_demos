@@ -2,6 +2,8 @@ package ge
 
 import (
 	"errors"
+	"io"
+	"log"
 	"syscall"
 )
 
@@ -36,14 +38,23 @@ func (b *buffer) grow() {
 }
 
 // readFromFile 从文件描述符里面读取数据，如果reader阻塞，会发生阻塞
-func (b *buffer) readFromFile(fd int32) (int, error) {
+func (b *buffer) readFromFile(fd int32) error {
 	b.grow()
 	n, err := syscall.Read(int(fd), b.buf[b.end:])
+	log.Println("readFromFile", n, err)
+
 	if n == 0 || err != nil {
-		return n, err
+		if err == syscall.EAGAIN {
+			return nil
+		}
+		if err != nil {
+			return err
+		}
+		return io.EOF
 	}
+
 	b.end += n
-	return n, nil
+	return nil
 }
 
 // seek 返回n个字节，而不产生移位，如果没有足够字节，返回错误

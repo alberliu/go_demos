@@ -1,6 +1,8 @@
 package ge
 
 import (
+	"encoding/binary"
+	"errors"
 	"log"
 	"sync"
 	"syscall"
@@ -28,20 +30,42 @@ func newConn(fd int32, s *server) *Conn {
 
 // 关闭连接
 func (c *Conn) GetFd() int32 {
-	c.m.RLock()
-	defer c.m.RUnlock()
-
 	return c.fd
 }
 
-func (c *Conn) Read(bytes []byte) (int, error) {
+func (c *Conn) Read() error {
 	c.m.Lock()
 	defer c.m.Unlock()
 
-	c.readBuffer.readFromReader()
-
+	err := c.readBuffer.readFromFile(c.fd)
+	if err != nil {
+		return err
+	}
 	c.lastReadTime = time.Now().Unix()
-	return syscall.Read(int(c.fd), bytes)
+
+	// 读取数据长度
+	lenBuf, err := c.readBuffer.seek(0, 2)
+	if err != nil {
+		return nil
+	}
+	log.Println("seek")
+	// 读取数据内容
+	valueLen := int(binary.BigEndian.Uint16(lenBuf))
+	log.Println("seek:len:", valueLen)
+	// 数据的字节数组长度大于buffer的长度，返回错误
+	if valueLen > 1024 {
+		return errors.New("illegal len")
+	}
+	log.Println("seek:len:1", valueLen)
+	valueBuf, err := c.readBuffer.read(2, valueLen)
+	if err != nil {
+		log.Println("readBuffer.read:", err)
+		return nil
+	}
+	log.Println("seek:len:2", valueLen)
+	c.s.handler.OnMessage(c, valueBuf)
+	log.Println("seek:len:3", valueLen)
+	return nil
 }
 
 func (c *Conn) Write(bytes []byte) (int, error) {
@@ -51,7 +75,7 @@ func (c *Conn) Write(bytes []byte) (int, error) {
 	return syscall.Write(int(c.fd), bytes)
 }
 
-// 关闭连接
+// Close 关闭连接
 func (c *Conn) Close() error {
 	c.m.Lock()
 	defer c.m.Unlock()

@@ -1,6 +1,7 @@
 package client
 
 import (
+	"go_demos/epoll/ge/codec"
 	"log"
 	"net"
 	"testing"
@@ -18,7 +19,7 @@ func TestEpoll_Client(t *testing.T) {
 		return // 终止程序
 	}
 
-	n, err := conn.Write([]byte("hello"))
+	n, err := conn.Write(codec.Encode([]byte("hello")))
 	if err != nil {
 		log.Println(err)
 		return
