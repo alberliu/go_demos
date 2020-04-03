@@ -10,30 +10,6 @@ type Handler struct {
 }
 
 func (Handler) OnConnect(c *ge.Conn) {
-	go func() {
-		for i := 0; i < 3; i++ {
-			go func(i int) {
-				if i == 0 {
-					for {
-						c.Write([]byte("1111111111111111111111111111111111111111111111111111111111111111111111"))
-					}
-				}
-				if i == 1 {
-					for {
-						c.Write([]byte("22222222222222222222222222222222222222222222222222222222222222222222222"))
-					}
-				}
-				if i == 2 {
-					for {
-						c.Write([]byte("333333"))
-					}
-
-				}
-
-			}(i)
-		}
-	}()
-
 	log.Println("connect:", c.GetFd())
 }
 func (Handler) OnMessage(c *ge.Conn, bytes []byte) {

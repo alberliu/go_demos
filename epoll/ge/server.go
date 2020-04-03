@@ -1,6 +1,7 @@
 package ge
 
 import (
+	"golang.org/x/sys/unix"
 	"io"
 	"log"
 	"net"
@@ -34,6 +35,7 @@ func NewServer(address string, handler Handler) (*server, error) {
 		log.Println(err)
 		return nil, err
 	}
+	syscall.Listen()
 	listener, err := net.ListenTCP("tcp", addr)
 	if err != nil {
 		log.Println(err)
@@ -45,11 +47,15 @@ func NewServer(address string, handler Handler) (*server, error) {
 		return nil, err
 	}
 
+	log.Println("listener:fd:", file.Fd())
+
 	e, err := EpollCreate()
 	if err != nil {
 		log.Println(err)
 		return nil, err
 	}
+
+	log.Println("epoll:fd:", e.fd)
 
 	e.AddListener(int(file.Fd()))
 	if err != nil {
