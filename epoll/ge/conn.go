@@ -11,7 +11,8 @@ import (
 const maxBufferLen = 1024
 
 type Conn struct {
-	m            sync.RWMutex           // 锁
+	rm           sync.Mutex             // read锁
+	wm           sync.Mutex             // write锁
 	s            *server                // 服务器引用
 	fd           int32                  // 文件描述符
 	readBuffer   *codec.Buffer          // 读缓存区
@@ -40,8 +41,8 @@ func (c *Conn) GetRemoteIP() int32 {
 }
 
 func (c *Conn) Read() error {
-	c.m.Lock()
-	c.m.Unlock()
+	c.rm.Lock()
+	defer c.rm.Unlock()
 
 	err := c.readBuffer.ReadFromFile(c.fd)
 	if err != nil {
@@ -61,17 +62,14 @@ func (c *Conn) Read() error {
 }
 
 func (c *Conn) Write(bytes []byte) (int, error) {
-	c.m.Lock()
-	defer c.m.Unlock()
+	/*c.wm.Lock()
+	defer c.wm.Unlock()*/
 
 	return syscall.Write(int(c.fd), bytes)
 }
 
 // Close 关闭连接
 func (c *Conn) Close() error {
-	c.m.Lock()
-	defer c.m.Unlock()
-
 	// 从epoll监听的文件描述符中删除
 	err := c.s.epoll.RemoveAndClose(int(c.fd))
 	if err != nil {

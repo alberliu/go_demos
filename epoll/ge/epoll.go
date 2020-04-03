@@ -6,7 +6,6 @@ import (
 	"golang.org/x/sys/unix"
 	"log"
 	"syscall"
-	"time"
 )
 
 const PollAll = unix.POLLIN | unix.POLLPRI | unix.POLLERR | unix.POLLHUP | unix.POLLNVAL
@@ -63,7 +62,6 @@ func (e *epoll) RemoveAndClose(fd int) error {
 }
 
 func (e *epoll) EpollWait(eventQueue chan syscall.EpollEvent) {
-	time.Sleep(time.Second)
 	events := make([]syscall.EpollEvent, 100)
 	n, err := syscall.EpollWait(e.fd, events, -1)
 	if err != nil {

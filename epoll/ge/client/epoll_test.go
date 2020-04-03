@@ -1,11 +1,11 @@
 package client
 
 import (
+	"fmt"
 	"go_demos/epoll/ge/codec"
 	"log"
 	"net"
 	"testing"
-	"time"
 )
 
 func init() {
@@ -35,12 +35,9 @@ func TestEpoll_Client(t *testing.T) {
 				log.Println(err)
 				return
 			}
-			log.Println("read:", string(bytes[0:n]))
+			fmt.Println(string(bytes[0:n]))
 		}
 	}()
-
-	time.Sleep(time.Second * 2)
-	conn.Close()
 
 	select {}
 }
