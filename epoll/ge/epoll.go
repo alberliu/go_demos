@@ -8,7 +8,10 @@ import (
 	"syscall"
 )
 
-const PollAll = unix.POLLIN | unix.POLLPRI | unix.POLLERR | unix.POLLHUP | unix.POLLNVAL
+const (
+	EpollListener = syscall.EPOLLIN | syscall.EPOLLPRI | syscall.EPOLLERR | syscall.EPOLLHUP | unix.EPOLLET
+	EpollRead     = syscall.EPOLLIN | syscall.EPOLLPRI | syscall.EPOLLERR | syscall.EPOLLHUP | unix.EPOLLET
+)
 
 type epoll struct {
 	fd  int
@@ -26,7 +29,10 @@ func EpollCreate() (*epoll, error) {
 }
 
 func (e *epoll) AddListener(fd int) error {
-	err := syscall.EpollCtl(e.fd, syscall.EPOLL_CTL_ADD, int(fd), &syscall.EpollEvent{Events: unix.POLLIN | unix.POLLHUP, Fd: int32(fd)})
+	err := syscall.EpollCtl(e.fd, syscall.EPOLL_CTL_ADD, fd, &syscall.EpollEvent{
+		Events: EpollListener,
+		Fd:     int32(fd),
+	})
 	if err != nil {
 		return err
 	}
@@ -35,8 +41,8 @@ func (e *epoll) AddListener(fd int) error {
 }
 
 func (e *epoll) AddRead(fd int) error {
-	err := syscall.EpollCtl(e.fd, syscall.EPOLL_CTL_ADD, int(fd), &syscall.EpollEvent{
-		Events: PollAll,
+	err := syscall.EpollCtl(e.fd, syscall.EPOLL_CTL_ADD, fd, &syscall.EpollEvent{
+		Events: EpollRead,
 		Fd:     int32(fd),
 	})
 	if err != nil {
@@ -62,12 +68,15 @@ func (e *epoll) RemoveAndClose(fd int) error {
 }
 
 func (e *epoll) EpollWait(eventQueue chan syscall.EpollEvent) {
+	//log.Println("epoll_wait start")
+	//time.Sleep(time.Second)
 	events := make([]syscall.EpollEvent, 100)
 	n, err := syscall.EpollWait(e.fd, events, -1)
 	if err != nil {
 		log.Println(err)
 		return
 	}
+	//log.Println("epoll_wait end", n)
 
 	for i := 0; i < n; i++ {
 		eventQueue <- events[i]

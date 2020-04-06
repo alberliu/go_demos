@@ -1,10 +1,8 @@
 package ge
 
 import (
-	"golang.org/x/sys/unix"
 	"io"
 	"log"
-	"net"
 	"sync"
 	"syscall"
 	"time"
@@ -30,12 +28,30 @@ type server struct {
 
 // NewServer 创建server服务器
 func NewServer(address string, handler Handler) (*server, error) {
-	addr, err := net.ResolveTCPAddr("tcp", address)
+	lfd, err := syscall.Socket(syscall.AF_INET, syscall.SOCK_STREAM, 0)
 	if err != nil {
 		log.Println(err)
 		return nil, err
 	}
-	syscall.Listen()
+
+	err = syscall.Bind(lfd, &syscall.SockaddrInet4{Port: 8080})
+	if err != nil {
+		log.Println(err)
+		return nil, err
+	}
+
+	err = syscall.Listen(lfd, 1024)
+	if err != nil {
+		log.Println(err)
+		return nil, err
+	}
+
+	/*addr, err := net.ResolveTCPAddr("tcp", address)
+	if err != nil {
+		log.Println(err)
+		return nil, err
+	}
+
 	listener, err := net.ListenTCP("tcp", addr)
 	if err != nil {
 		log.Println(err)
@@ -45,9 +61,9 @@ func NewServer(address string, handler Handler) (*server, error) {
 	if err != nil {
 		log.Println(err)
 		return nil, err
-	}
+	}*/
 
-	log.Println("listener:fd:", file.Fd())
+	log.Println("listener:fd:", lfd)
 
 	e, err := EpollCreate()
 	if err != nil {
@@ -57,7 +73,7 @@ func NewServer(address string, handler Handler) (*server, error) {
 
 	log.Println("epoll:fd:", e.fd)
 
-	e.AddListener(int(file.Fd()))
+	e.AddListener(lfd)
 	if err != nil {
 		log.Println(err)
 		return nil, err
@@ -111,6 +127,7 @@ func (s *server) startConsumer() {
 // Consume 消费者
 func (s *server) consume() {
 	for event := range s.eventQueue {
+		//log.Println("event", event.Fd, event.Events)
 		// 客户端请求建立连接
 		if event.Fd == int32(s.epoll.lfd) {
 			nfd, _, err := syscall.Accept(int(event.Fd))
