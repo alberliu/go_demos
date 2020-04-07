@@ -6,6 +6,7 @@ import (
 	"log"
 	"net"
 	"testing"
+	"time"
 )
 
 func init() {
@@ -21,6 +22,22 @@ func TestEpoll_Client(t *testing.T) {
 	}
 
 	n, err := conn.Write(codec.Encode([]byte("hello")))
+	if err != nil {
+		log.Println(err)
+		return
+	}
+	log.Println("write:", n)
+
+	time.Sleep(2 * time.Second)
+	n, err = conn.Write(codec.Encode([]byte("hello")))
+	if err != nil {
+		log.Println(err)
+		return
+	}
+	log.Println("write:", n)
+
+	time.Sleep(2 * time.Second)
+	n, err = conn.Write(codec.Encode([]byte("hello")))
 	if err != nil {
 		log.Println(err)
 		return

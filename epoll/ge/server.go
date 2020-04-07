@@ -27,14 +27,14 @@ type server struct {
 }
 
 // NewServer 创建server服务器
-func NewServer(address string, handler Handler) (*server, error) {
+func NewServer(port int, handler Handler) (*server, error) {
 	lfd, err := syscall.Socket(syscall.AF_INET, syscall.SOCK_STREAM, 0)
 	if err != nil {
 		log.Println(err)
 		return nil, err
 	}
 
-	err = syscall.Bind(lfd, &syscall.SockaddrInet4{Port: 8080})
+	err = syscall.Bind(lfd, &syscall.SockaddrInet4{Port: port})
 	if err != nil {
 		log.Println(err)
 		return nil, err
@@ -45,23 +45,6 @@ func NewServer(address string, handler Handler) (*server, error) {
 		log.Println(err)
 		return nil, err
 	}
-
-	/*addr, err := net.ResolveTCPAddr("tcp", address)
-	if err != nil {
-		log.Println(err)
-		return nil, err
-	}
-
-	listener, err := net.ListenTCP("tcp", addr)
-	if err != nil {
-		log.Println(err)
-		return nil, err
-	}
-	file, err := listener.File()
-	if err != nil {
-		log.Println(err)
-		return nil, err
-	}*/
 
 	log.Println("listener:fd:", lfd)
 
@@ -152,12 +135,13 @@ func (s *server) consume() {
 
 		err := c.Read()
 		if err != nil {
+			log.Println(err)
 			if err == io.EOF {
 				c.Close()
 				s.handler.OnClose(c)
 				continue
 			}
-			log.Println(err)
+			// todo 处理其他错误
 		}
 	}
 }

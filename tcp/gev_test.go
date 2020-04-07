@@ -23,7 +23,7 @@ func (s *example) OnClose(c *connection.Connection) {
 	//log.Println("OnClose")
 }
 
-func main() {
+func m() {
 	handler := new(example)
 	var port int
 	var loops int

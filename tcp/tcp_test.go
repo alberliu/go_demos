@@ -29,6 +29,30 @@ func TestServer(t *testing.T) {
 	}
 }
 
+func TestTCPServer(t *testing.T) {
+	addr, err := net.ResolveTCPAddr("tcp", ":8080")
+	if err != nil {
+		log.Println(err)
+		return
+	}
+
+	listener, err := net.ListenTCP("tcp", addr)
+	if err != nil {
+		log.Println(err)
+		return
+	}
+	// 监听并接受来自客户端的连接
+	for {
+		conn, err := listener.AcceptTCP()
+		if err != nil {
+			log.Println(err)
+			return // 终止程序
+		}
+		fmt.Println("listener ok")
+		go HandlerConn(conn)
+	}
+}
+
 func HandlerConn(conn net.Conn) {
 	conn.RemoteAddr()
 	buf := make([]byte, 10)

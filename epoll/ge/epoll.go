@@ -68,15 +68,12 @@ func (e *epoll) RemoveAndClose(fd int) error {
 }
 
 func (e *epoll) EpollWait(eventQueue chan syscall.EpollEvent) {
-	//log.Println("epoll_wait start")
-	//time.Sleep(time.Second)
 	events := make([]syscall.EpollEvent, 100)
 	n, err := syscall.EpollWait(e.fd, events, -1)
 	if err != nil {
 		log.Println(err)
 		return
 	}
-	//log.Println("epoll_wait end", n)
 
 	for i := 0; i < n; i++ {
 		eventQueue <- events[i]

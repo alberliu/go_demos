@@ -8,25 +8,19 @@ import (
 	"time"
 )
 
-const maxBufferLen = 1024
-
 type Conn struct {
-	rm           sync.Mutex             // read锁
-	wm           sync.Mutex             // write锁
-	s            *server                // 服务器引用
-	fd           int32                  // 文件描述符
-	readBuffer   *codec.Buffer          // 读缓存区
-	lastReadTime int64                  // 最后一次读取数据的时间
-	extra        map[string]interface{} // 扩展字段
+	rm           sync.Mutex  // read锁
+	s            *server     // 服务器引用
+	fd           int32       // 文件描述符
+	lastReadTime int64       // 最后一次读取数据的时间
+	extra        interface{} // 扩展字段
 }
 
 func newConn(fd int32, s *server) *Conn {
 	return &Conn{
 		s:            s,
 		fd:           fd,
-		readBuffer:   codec.NewBuffer(make([]byte, maxBufferLen)),
 		lastReadTime: time.Now().Unix(),
-		extra:        make(map[string]interface{}),
 	}
 }
 
@@ -44,27 +38,23 @@ func (c *Conn) Read() error {
 	c.rm.Lock()
 	defer c.rm.Unlock()
 
-	err := c.readBuffer.ReadFromFile(c.fd)
-	if err != nil {
-		return err
-	}
-	c.lastReadTime = time.Now().Unix()
+	for {
+		bytes, ok, err := codec.Decode(int(c.fd))
+		if err != nil {
+			log.Println("decode", err)
+			return err
+		}
 
-	bytes, ok, err := codec.Decode(c.readBuffer)
-	if err != nil {
-		return err
-	}
+		if !ok {
+			return nil
+		}
 
-	if ok {
 		c.s.handler.OnMessage(c, bytes)
 	}
 	return nil
 }
 
 func (c *Conn) Write(bytes []byte) (int, error) {
-	/*c.wm.Lock()
-	defer c.wm.Unlock()*/
-
 	return syscall.Write(int(c.fd), bytes)
 }
 
