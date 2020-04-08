@@ -119,7 +119,7 @@ func (s *server) consume() {
 				continue
 			}
 
-			s.epoll.AddRead(nfd)
+			s.epoll.AddRead(nfd) // todo 错误
 			conn := newConn(int32(nfd), s)
 			s.conns.Store(int32(nfd), conn)
 			s.handler.OnConnect(conn)
