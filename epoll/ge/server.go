@@ -30,37 +30,35 @@ type server struct {
 func NewServer(port int, handler Handler) (*server, error) {
 	lfd, err := syscall.Socket(syscall.AF_INET, syscall.SOCK_STREAM, 0)
 	if err != nil {
-		log.Println(err)
+		Log.Error(err)
 		return nil, err
 	}
 
 	err = syscall.Bind(lfd, &syscall.SockaddrInet4{Port: port})
 	if err != nil {
-		log.Println(err)
+		Log.Error(err)
 		return nil, err
 	}
 
 	err = syscall.Listen(lfd, 1024)
 	if err != nil {
-		log.Println(err)
+		Log.Error(err)
 		return nil, err
 	}
-
-	log.Println("listener:fd:", lfd)
 
 	e, err := EpollCreate()
 	if err != nil {
-		log.Println(err)
+		Log.Error(err)
 		return nil, err
 	}
-
-	log.Println("epoll:fd:", e.fd)
 
 	e.AddListener(lfd)
 	if err != nil {
-		log.Println(err)
+		Log.Error(err)
 		return nil, err
 	}
+
+	Log.Info("ge server init,listener port:", port)
 	return &server{
 		epoll:      e,
 		handler:    handler,
@@ -78,6 +76,7 @@ func (s *server) SetTimeout(ticker, timeout time.Duration) {
 
 // Run 启动服务
 func (s *server) Run() {
+	Log.Info("ge server run")
 	s.startConsumer()
 	s.checkTimeout()
 	s.startProducer()
@@ -110,7 +109,6 @@ func (s *server) startConsumer() {
 // Consume 消费者
 func (s *server) consume() {
 	for event := range s.eventQueue {
-		//log.Println("event", event.Fd, event.Events)
 		// 客户端请求建立连接
 		if event.Fd == int32(s.epoll.lfd) {
 			nfd, _, err := syscall.Accept(int(event.Fd))
@@ -119,7 +117,11 @@ func (s *server) consume() {
 				continue
 			}
 
-			s.epoll.AddRead(nfd) // todo 错误
+			err = s.epoll.AddRead(nfd)
+			if err != nil {
+				Log.Error(err)
+				continue
+			}
 			conn := newConn(int32(nfd), s)
 			s.conns.Store(int32(nfd), conn)
 			s.handler.OnConnect(conn)
@@ -136,12 +138,14 @@ func (s *server) consume() {
 		err := c.Read()
 		if err != nil {
 			log.Println(err)
+
+			// 客户端主动关闭连接
 			if err == io.EOF {
 				c.Close()
 				s.handler.OnClose(c)
 				continue
 			}
-			// todo 处理其他错误
+			//
 		}
 	}
 }
