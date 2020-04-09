@@ -22,14 +22,18 @@ func Encode(bytes []byte) []byte {
 	return buffer[0 : headerLen+l]
 }
 
+// Decode 解码
 func Decode(fd int) ([]byte, bool, error) {
 	var bytes = make([]byte, 1024)
 	n, _, err := syscall.Recvfrom(fd, bytes, syscall.MSG_PEEK|syscall.MSG_DONTWAIT)
 	if err != nil {
-		if err.Error() == errRTUStr {
+		if err == syscall.EAGAIN {
 			return nil, false, nil
 		}
 		log.Println("recv_from error", err)
+		if err == syscall.EBADF {
+			log.Println("syscall.EBADF")
+		}
 		return nil, false, err
 	}
 	if n == 0 {

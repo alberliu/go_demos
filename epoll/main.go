@@ -3,6 +3,7 @@ package main
 import (
 	"go_demos/epoll/ge"
 	"log"
+	"syscall"
 	"time"
 )
 
@@ -17,6 +18,14 @@ func (Handler) OnMessage(c *ge.Conn, bytes []byte) {
 }
 func (Handler) OnClose(c *ge.Conn) {
 	log.Println("close:", c.GetFd())
+	n, err := c.Write([]byte("111"))
+	if err == syscall.EBADF {
+		log.Println("syscall.EBADF")
+	}
+	log.Println(n, err)
+
+	c.Read()
+
 }
 
 func main() {
@@ -27,6 +36,6 @@ func main() {
 		log.Panicln("err")
 		return
 	}
-	server.SetTimeout(1*time.Minute, 5*time.Minute)
+	server.SetTimeout(1*time.Second, 5*time.Second)
 	server.Run()
 }
