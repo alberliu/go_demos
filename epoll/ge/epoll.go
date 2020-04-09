@@ -4,7 +4,6 @@ package ge
 
 import (
 	"golang.org/x/sys/unix"
-	"log"
 	"syscall"
 )
 
@@ -60,22 +59,21 @@ func (e *epoll) RemoveAndClose(fd int) error {
 
 	err = syscall.Close(fd)
 	if err != nil {
-		log.Println(err)
 		return err
 	}
 
 	return nil
 }
 
-func (e *epoll) EpollWait(eventQueue chan syscall.EpollEvent) {
+func (e *epoll) EpollWait(eventQueue chan syscall.EpollEvent) error {
 	events := make([]syscall.EpollEvent, 100)
 	n, err := syscall.EpollWait(e.fd, events, -1)
 	if err != nil {
-		log.Println(err)
-		return
+		return err
 	}
 
 	for i := 0; i < n; i++ {
 		eventQueue <- events[i]
 	}
+	return nil
 }

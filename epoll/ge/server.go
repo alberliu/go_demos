@@ -2,7 +2,6 @@ package ge
 
 import (
 	"io"
-	"log"
 	"sync"
 	"syscall"
 	"time"
@@ -27,7 +26,8 @@ type server struct {
 }
 
 // NewServer 创建server服务器
-func NewServer(port int, handler Handler) (*server, error) {
+func NewServer(port int, handler Handler, headerLen, readMaxLen, writeLen int) (*server, error) {
+	InitCodec(headerLen, readMaxLen, writeLen)
 	lfd, err := syscall.Socket(syscall.AF_INET, syscall.SOCK_STREAM, 0)
 	if err != nil {
 		Log.Error(err)
@@ -93,10 +93,13 @@ func (s *server) startProducer() {
 	for {
 		select {
 		case <-s.stop:
-			log.Println("stop producer")
+			Log.Error("stop producer")
 			return
 		default:
-			s.epoll.EpollWait(s.eventQueue)
+			err := s.epoll.EpollWait(s.eventQueue)
+			if err != nil {
+				Log.Error(err)
+			}
 		}
 	}
 }
@@ -113,7 +116,7 @@ func (s *server) consume() {
 		if event.Fd == int32(s.epoll.lfd) {
 			nfd, _, err := syscall.Accept(int(event.Fd))
 			if err != nil {
-				log.Println(err)
+				Log.Error(err)
 				continue
 			}
 
@@ -130,22 +133,25 @@ func (s *server) consume() {
 
 		v, ok := s.conns.Load(event.Fd)
 		if !ok {
-			log.Println("not found in conns,", event.Fd)
+			Log.Error("not found in conns,", event.Fd)
 			continue
 		}
 		c := v.(*Conn)
 
 		err := c.Read()
 		if err != nil {
-			log.Println(err)
-
-			// 客户端主动关闭连接
+			// 客户端关闭连接
 			if err == io.EOF {
 				c.Close()
 				s.handler.OnClose(c)
 				continue
 			}
-			//
+			// 服务端关闭连接
+			if err == syscall.EBADF {
+				continue
+			}
+			// 其他错误
+			Log.Error(err)
 		}
 	}
 }

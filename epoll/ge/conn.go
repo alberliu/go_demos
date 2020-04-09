@@ -1,7 +1,6 @@
 package ge
 
 import (
-	"go_demos/epoll/ge/codec"
 	"log"
 	"sync"
 	"syscall"
@@ -38,19 +37,11 @@ func (c *Conn) Read() error {
 	c.rm.Lock()
 	defer c.rm.Unlock()
 
-	for {
-		bytes, ok, err := codec.Decode(int(c.fd))
-		if err != nil {
-			log.Println("decode", err)
-			return err
-		}
-
-		if !ok {
-			return nil
-		}
-
-		c.s.handler.OnMessage(c, bytes)
+	err := Decode(c)
+	if err != nil {
+		return err
 	}
+
 	return nil
 }
 

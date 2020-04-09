@@ -1,8 +1,8 @@
 package client
 
 import (
+	"encoding/binary"
 	"fmt"
-	"go_demos/epoll/ge/codec"
 	"log"
 	"net"
 	"testing"
@@ -13,6 +13,17 @@ func init() {
 	log.SetFlags(log.Ldate | log.Ltime | log.Lshortfile)
 }
 
+// Encode 编码数据
+func Encode(bytes []byte) []byte {
+	l := len(bytes)
+	buffer := make([]byte, l+2)
+	// 将消息长度写入buffer
+	binary.BigEndian.PutUint16(buffer[0:2], uint16(l))
+	// 将消息内容内容写入buffer
+	copy(buffer[2:], bytes)
+	return buffer[0 : 2+l]
+}
+
 func TestEpoll_Client(t *testing.T) {
 	conn, err := net.Dial("tcp", "127.0.0.1:8080")
 	if err != nil {
@@ -20,7 +31,7 @@ func TestEpoll_Client(t *testing.T) {
 		return // 终止程序
 	}
 
-	n, err := conn.Write(codec.Encode([]byte("hello")))
+	n, err := conn.Write(Encode([]byte("hello")))
 	if err != nil {
 		log.Println(err)
 		return
@@ -28,7 +39,7 @@ func TestEpoll_Client(t *testing.T) {
 	log.Println("write:", n)
 
 	time.Sleep(2 * time.Second)
-	n, err = conn.Write(codec.Encode([]byte("hello")))
+	n, err = conn.Write(Encode([]byte("hello")))
 	if err != nil {
 		log.Println(err)
 		return
@@ -36,7 +47,7 @@ func TestEpoll_Client(t *testing.T) {
 	log.Println("write:", n)
 
 	time.Sleep(2 * time.Second)
-	n, err = conn.Write(codec.Encode([]byte("hello")))
+	n, err = conn.Write(Encode([]byte("hello")))
 	if err != nil {
 		log.Println(err)
 		return
