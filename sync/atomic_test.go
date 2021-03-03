@@ -2,6 +2,8 @@ package sync
 
 import (
 	"fmt"
+	"math"
+	"os"
 	"sync"
 	"sync/atomic"
 	"testing"
@@ -25,10 +27,14 @@ func TestAtomic(t *testing.T) {
 	fmt.Println(a)
 }
 
+// 1,2
+// 4,5
 func TestRWMutex(t *testing.T) {
-	var m sync.Mutex
-	m.Lock()
-	fmt.Println(1)
-	m.Lock()
-	fmt.Println(2)
+	r := (1*4 + 2*5) / (math.Sqrt(1*1+2*2) * math.Sqrt(4*4+5*5))
+	fmt.Println(r)
+	fmt.Println(math.Sqrt(4))
+}
+
+func TestEnv(t *testing.T) {
+	fmt.Println(os.Getenv("PATH"))
 }

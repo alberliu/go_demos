@@ -1,12 +1,12 @@
 package collection_test
 
 import (
-	"testing"
-	"sort"
 	"fmt"
+	"sort"
+	"testing"
 )
 
-func TestSort(t *testing.T){
+func TestSort(t *testing.T) {
 	x := 11
 	s := []int{3, 6, 8, 11, 45} //注意已经升序排序
 	pos := sort.Search(len(s), func(i int) bool { return s[i] >= x })
@@ -15,8 +15,4 @@ func TestSort(t *testing.T){
 	} else {
 		fmt.Println("s不包含元素", x)
 	}
-
-
 }
-
-

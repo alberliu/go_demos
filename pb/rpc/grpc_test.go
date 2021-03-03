@@ -34,7 +34,7 @@ func StreamServerInterceptor(srv interface{}, ss grpc.ServerStream, info *grpc.S
 
 type server struct{}
 
-const port = ":50002"
+const port = ":8080"
 
 func (s *server) SayHello(ctx context.Context, in *HelloRequest) (*HelloReply, error) {
 	md, ok := metadata.FromIncomingContext(ctx)
@@ -57,7 +57,7 @@ func TestServer(t *testing.T) {
 }
 
 func TestClientNginxProxy(t *testing.T) {
-	conn, err := grpc.Dial("localhost:80", grpc.WithInsecure())
+	conn, err := grpc.Dial("127.0.0.1:80", grpc.WithInsecure())
 	if err != nil {
 		log.Fatalf("did not connect: %v", err)
 	}

@@ -1,48 +1,25 @@
-{
-  "node": "tars.tarsnode.ServerObj@tcp -h 192.168.0.200 -p 19386 -t 60000",
-  "app": "yunGame",
-  "server": "arcadeconnect",
-  "localip": "192.168.0.200",
-  "Local": "tcp -h 127.0.0.1 -p 10090 -t 3000",
-  "BasePath": "/usr/local/app/tars/tarsnode/data/yunGame.arcadeconnect/bin/",
-  "DataPath": "/usr/local/app/tars/tarsnode/data/yunGame.arcadeconnect/data/",
-  "Container": "",
-  "LogPath": "/usr/local/app/tars/app_log/",
-  "LogSize": "10M",
-  "LogLevel": "INFO",
-  "Version": "1.0.0",
-  "Adapters": {
-    "AdminAdapter": {
-      "Endpoint": {
-        "Host": "127.0.0.1",
-        "Port": 10090,
-        "IPPort": "127.0.0.1:10090",
-        "Timeout": 3000,
-        "Proto": "tcp",
-        "Bind": "",
-        "Container": ""
-      },
-      "Protocol": "tcp",
-      "Obj": "AdminObj",
-      "Threads": 1,
-      "MaxConns": 1000,
-      "QueueCap": 5000
-    },
-    "yunGame.arcadeconnect.ArcadeConnectIntObjAdapter": {
-      "Endpoint": {
-        "Host": "192.168.0.200",
-        "Port": 10090,
-        "IPPort": "192.168.0.200:10090",
-        "Timeout": 60000,
-        "Proto": "tcp",
-        "Bind": "",
-        "Container": ""
-      },
-      "Protocol": "tars",
-      "Obj": "yunGame.arcadeconnect.ArcadeConnectIntObj",
-      "Threads": 5,
-      "MaxConns": 200000,
-      "QueueCap": 10000
-    }
-  }
-}
+time:2021-03-02 16:34:17
+env:prod
+server:yunGame.web.WebExtObj
+function:getCustomerServiceQQ
+ip:192.168.1.161
+panic:runtime error: integer divide by zero
+stack:goroutine 15898464 [running]:
+code.com/tars/goframework/tars/servant.getStackInfo(0xc0079c0274538562, 0x4c92e8bee42a)
+/Users/ios/WorkSpace/server/vendor/src/code.com/tars/goframework/tars/servant/jceprotocol.go:70 +0x6f
+code.com/tars/goframework/tars/servant.(*JceProtocol).doDispatch.func1(0xc005affb00, 0xc000623730)
+/Users/ios/WorkSpace/server/vendor/src/code.com/tars/goframework/tars/servant/jceprotocol.go:51 +0xfe
+panic(0x1432600, 0x24532d0)
+/usr/local/Cellar/go/1.15.2/libexec/src/runtime/panic.go:969 +0x175
+yunGame/web/handler.(*WebExtObj).GetCustomerServiceQQ(0x249e9e0, 0x1995fa0, 0xc000fc1380, 0x249e9e0, 0x249e9e0, 0x0, 0x0)
+/Users/ios/WorkSpace/server/src/yunGame/web/handler/web_ext.go:1322 +0x5fb
+util/protocol/yunpb.(*webExtObjDispatcher).Dispatch(0x249e9e0, 0x1995fa0, 0xc000fc1380, 0x17924e0, 0x249e9e0, 0xc005affb00, 0x1995fa0, 0xc000fc1380, 0xc0020049c0)
+/Users/ios/WorkSpace/server/src/util/protocol/yunpb/web.ext.pb.go:17088 +0x8975
+code.com/tars/goframework/tars/servant.(*JceProtocol).doDispatch(0xc000328c60, 0x1995f60, 0xc005affaa0, 0xc005affb00, 0x0, 0x0, 0x0)
+/Users/ios/WorkSpace/server/vendor/src/code.com/tars/goframework/tars/servant/jceprotocol.go:63 +0x30b
+code.com/tars/goframework/tars/servant.(*JceProtocol).Invoke(0xc000328c60, 0x1995f60, 0xc005affaa0, 0xc00505e3c0, 0x130, 0x130, 0x0, 0x0, 0x0, 0x0, ...)
+/Users/ios/WorkSpace/server/vendor/src/code.com/tars/goframework/tars/servant/jceprotocol.go:99 +0x1145
+code.com/tars/goframework/tars/tarsserver.(*ConnectHander).invoke.func2(0xc001390420, 0x1995f60, 0xc005affaa0, 0xc00505e3c0, 0x130, 0x130, 0xc005affa40)
+/Users/ios/WorkSpace/server/vendor/src/code.com/tars/goframework/tars/tarsserver/handler.go:200 +0xa2
+created by code.com/tars/goframework/tars/tarsserver.(*ConnectHander).invoke
+/Users/ios/WorkSpace/server/vendor/src/code.com/tars/goframework/tars/tarsserver/handler.go:199 +0x1c5

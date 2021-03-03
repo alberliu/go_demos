@@ -35,9 +35,10 @@ func TimeEncoder(t time.Time, enc zapcore.PrimitiveArrayEncoder) {
 func TestLogrotate(t *testing.T) {
 	w := zapcore.AddSync(&lumberjack.Logger{
 		Filename:   "foo.log",
-		MaxSize:    500, // megabytes
-		MaxBackups: 3,
+		MaxSize:    2, // megabytes
+		MaxBackups: 10,
 		MaxAge:     28, // days
+		LocalTime:  true,
 	})
 	core := zapcore.NewCore(
 		zapcore.NewJSONEncoder(NewEncoderConfig()),
@@ -46,9 +47,7 @@ func TestLogrotate(t *testing.T) {
 		zap.DebugLevel,
 	)
 	logger := zap.New(core, zap.AddCaller())
-	logger.Info("info")
-}
-
-func TestZap(t *testing.T) {
-
+	for {
+		logger.Info("info fhdsjkhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhkkkkkkkkkkkkkk")
+	}
 }

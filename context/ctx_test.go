@@ -30,51 +30,31 @@ func TestCtx(t *testing.T) {
 	select {}
 }
 
-//对方法进行超时控制
-func CtxUse() {
-	timeout := 5 * time.Second
-	ctx, caccel := context.WithTimeout(context.Background(), timeout)
-	defer caccel()
+func TestCtxValue(t *testing.T) {
+	var ctx context.Context = context.TODO()
+	ctx = context.WithValue(ctx, "data_key", "data")
+	fmt.Println(ctx.Value("data_key1"))
+}
 
-	done := make(chan int, 1)
-	go func() {
-		do(ctx)
-		done <- 1
-	}()
+type S struct {
+	A int
+	B int
+}
 
-	select {
-	case <-done:
-		fmt.Println("ok")
-	case <-ctx.Done():
-		fmt.Println("timeout")
-		return
+func TestInterFace(t *testing.T) {
+	s1 := &S{}
+	var i interface{} = s1
+	s2 := i.(*S)
+	s2.A = 1
+	fmt.Println(i)
+
+	s1.A = 2
+	fmt.Println(i)
+}
+
+func TestCase(t *testing.T) {
+	var a []int64
+	for {
+		a = append(a, 1)
 	}
-}
-
-func do(ctx context.Context) {
-	for i := 1; i <= 7; i++ {
-		time.Sleep(1 * time.Second)
-		fmt.Println(i, "work")
-	}
-}
-
-func TestCtx2(t *testing.T) {
-	go CtxUse()
-	select {}
-}
-
-type A struct {
-	a int
-}
-
-type B struct {
-	A
-	b int
-}
-
-func TestS(t *testing.T) {
-	location, _ := time.LoadLocation("Local")
-	t1, _ := time.ParseInLocation("2006-01-02 15:04:05", "2019-05-04 00:00:00", location)
-	t2, _ := time.ParseInLocation("2006-01-02 15:04:05", "2019-05-04 00:00:00", location)
-	fmt.Println(t1.Equal(t2))
 }

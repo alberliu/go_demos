@@ -28,6 +28,7 @@ require (
 	github.com/satori/go.uuid v1.2.0
 	github.com/shiena/ansicolor v0.0.0-20151119151921-a422bbe96644 // indirect
 	github.com/tealeg/xlsx v1.0.5 // indirect
+	github.com/traefik/traefik v1.7.26 // indirect
 	github.com/xormplus/builder v0.0.0-20200306092541-e066fb7511c8 // indirect
 	github.com/xormplus/core v0.0.0-20200308074340-f3bce19d5f31 // indirect
 	github.com/xormplus/xorm v0.0.0-20200312060401-935be4f0f832
