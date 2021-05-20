@@ -1,12 +1,6 @@
 package rpc
 
-import (
-	"fmt"
-	_ "google.golang.org/grpc/balancer/grpclb"
-	"google.golang.org/grpc/resolver"
-	"strings"
-)
-
+/*
 func init() {
 	fmt.Println("init")
 	RegisterResolver()
@@ -64,3 +58,4 @@ func (r *IPsResolver) ResolveNow(opt resolver.ResolveNowOption) {
 func (r *IPsResolver) Close() {
 	fmt.Println("Close")
 }
+*/

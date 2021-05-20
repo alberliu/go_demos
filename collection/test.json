@@ -1,0 +1,60 @@
+AID
+广告计划id	样例：1645988237525045	点击、展示均支持
+AID_NAME
+广告计划名称		点击、展示均支持
+ADVERTISER_ID
+广告主id	样例：1631857582073864	点击
+CID
+广告创意 id，长整型	样例：1650703686054530	点击、展示均支持
+CID_NAME
+广告创意名称		点击、展示均支持
+CAMPAIGN_ID
+广告组 id	样例：1651688272934434	点击、展示均支持
+CAMPAIGN_NAME
+广告组名称		点击、展示均支持
+CTYPE
+创意样式	2=小图模式 3=大图模式 4=组图模式 5=视频	点击
+CSITE
+广告投放位置	今日头条：1-10000，80000-110001西瓜视频：10001-10099火山小视频：30001-30099抖音：40001-40099穿山甲开屏广告：800000000穿山甲网盟非开屏广告：900000000通投广告位：33013搜索：38016	点击、展示均支持
+CONVERT_ID
+转化id	样例：1681681272671401	点击
+REQUEST_ID
+请求下发的id	样例：20191202180607010026077068090BA60A	点击
+SL
+这次请求的语言	样例: zh	点击
+IMEI
+安卓的设备 ID 的 md5 摘要，32位	假设原始的 imei 是 868823031739689我们最终发送的是 imei 的 md5 摘要：0c2bd03c39f19845bf54ea0abafae70e，会存在部分无法获取imei的情况，则imei会回传空字符串或者0的md5摘要	点击、展示均支持
+IDFA
+IOS 6+的设备id字段，32位	样例：4FCFEFA1-096D-4176-B352-1870ED6DB777注意，一些例外00000000-0000-0000-0000-000000000000如果用户关闭里读取idfa的权限，会导致idfa全部是0	点击、展示均支持
+ANDROIDID
+安卓id原值的md5，32位	样例，androidId的原值是： 7b5ca2d57178d2f1我们进行md5摘要，最终结果是：873541edf36da9170af47d5b69e82193	点击、展示均支持
+OAID
+Android Q及更高版本的设备号，32位	样例：97e7ef3f-e5f2-d0b8-ccfc-f79bbeaf4841注意，一些例外如果无法获取oaid，oaid会传空字符串	点击、展示均支持
+OAID_MD5
+Android Q及更高版本的设备号的md5摘要，32位	样例:87f8274c36eb73fabcbf143a10eca6a4，会存在部分无法获取oaid的情况，则该字段会回传空字符串	点击
+OS
+操作系统平台	安卓：0IOS：1 其他：3	点击、展示均支持
+MAC
+移动设备mac地址,转换成大写字母,去掉“:”，并且取md5摘要后的结果	假设原始的mac地址是34:d7:12:9b:3a:89去掉“：”后变成 34d7129b3a89变成大写字母34D7129B3A89取MD5摘要，最后变成如下结果:df97bc5021e14256e141b2f036df5a3c	点击、展示均支持
+MAC1
+移动设备 mac 地址,转换成大写字母,并且取md5摘要后的结果，32位	假设原始的mac地址是 34:d7:12:9b:3a:89变成大写字母： 34:D7:12:9B:3A:89进行MD5摘要，最后变成如下结果：4d0433eb614f5d5ad409a65395426cbe	点击
+IP
+媒体投放系统获取的用户终端的公共IP地址	样例：61.158.146.195或240e:398:1c90:9d00:5513:b9c9:650a:d9d2	点击、展示均支持
+UA
+用户代理(User Agent)，一个特殊字符串头，使得服务器能够识别客户使用的操作系统及版本、CPU类型、浏览器及版本、浏览器渲染引擎、浏览器语言、浏览器插件等。	经过url encode，样例：News+7.4.5+rv%3A7.4.5.23%5C%28iPhone%3B+iOS+12.4.1%3B+zh_CN%5C%29Cronet	点击、展示均支持
+GEO
+位置信息，包含三部分:latitude（纬度），longitude（经度）以及precise（确切信息,精度）	十进制保留1位小数，西经南纬保留负数，用字母 x 分 割纬度与精度 (先纬后经，最后精度），如：35.7x122.4x100.0	点击、展示均支持
+TS
+客户端发生广告点击事件的时间，以毫秒为单位时间戳	样例：1575194434000	点击、展示均支持
+CALLBACK_PARAM
+一些跟广告信息相关的回调参数，内容是一个加密字符串，在调用事件回传接口的时候会用到	样例：EJiw267wvfQCGKf2g74ZIPD89-vIATAMOAFCIjIwMTkxMTI3MTQxMTEzMDEwMDI2MDc3MjE1MTUwNTczNTBIAQ==	点击、展示均支持
+CALLBACK_URL
+直接把调用事件回传接口的url生成出来，广告主可以直接使用	样例：https://ad.toutiao.com/track/activate/?callback=EJiw267wvfQCGKf2g74ZIPD89-vIATAMOAFCIjIwMTkxMTI3MTQxMTEzMDEwMDI2MDc3MjE1MTUwNTczNTBIAQ==&os=0&muid=db94e6a60a9c6661e3e03a7d301c25b6	点击、展示均支持	
+MODEL
+手机型号	包含多种格式，如iPhone12,2 (urlencode之后为iPhone12%2c2)，iPhone X (urlencode之后为iPhone+X)，SM-A750GN (urlencode之后为SM-A750GN)	点击、展示均支持
+UNION_SITE
+对外广告位编码	2045891290	点击、展示均支持
+CAID1
+不同版本的中国广告协会互联网广告标识，CAID1是20201230版，暂无CAID2	f949f306494646edfee1f939698e1fb1	点击
+CAID2
+不同版本的中国广告协会互联网广告标识，CAID1是20201230版，暂无CAID2	f949f306494646edfee1f939698e1fb1	点击

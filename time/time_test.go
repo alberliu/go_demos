@@ -95,10 +95,8 @@ func TestTicker(t *testing.T) {
 }
 
 func TestTimeInt(t *testing.T) {
-	a := time.Now().UnixNano()
-	time.Sleep(3 * time.Second)
-	b := time.Now().UnixNano()
-	fmt.Println(b - a)
+	fmt.Println((time.Now().UnixNano() / 1000000) & 0x7fffffff)
+	fmt.Println(time.Now().UnixNano() / 1000000)
 }
 
 func ReturnInt() []int {
@@ -106,8 +104,10 @@ func ReturnInt() []int {
 }
 
 func TestFormatToDate(t *testing.T) {
-	fmt.Println(0x1A)
-
+	now := time.Now()
+	now = time.Date(now.Year(), now.Month(), now.Day(), 0, 0, 0, 0, time.Local)
+	now = now.AddDate(0, 0, -int(time.Now().Weekday()-1))
+	fmt.Println(now)
 }
 
 func dive100(i int64) string {
