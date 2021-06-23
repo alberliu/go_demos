@@ -175,4 +175,11 @@ func TestData(t *testing.T) {
 	for i := 0; i < 1024; i++ {
 		fmt.Printf("0")
 	}
+	fmt.Println()
 }
+
+// docker run -it -d -p 8889:8888 -p 8091:8090 -v /usr/local/app/tars/tarsnode2/:/usr/local/app/tars/tarsnode/ -v /usr/local/app/tars/app_log/tars/tarsnode2/:/usr/local/app/tars/app_log/tars/tarsnode/ -v /usr/local/app/tars/app_log/goim/comet2:/usr/local/app/tars/app_log/goim/comet centos:7.9.2009 /bin/bash -c 'sh /usr/local/app/tars/tarsnode/util/execute.sh'
+// docker run -it -p 8889:8888 -p 8091:8090 -v /usr/local/app/tars/tarsnode2/:/usr/local/app/tars/tarsnode/ -v /usr/local/app/tars/app_log/tars/tarsnode2/:/usr/local/app/tars/app_log/tars/tarsnode/ -v /usr/local/app/tars/app_log/goim/comet2:/usr/local/app/tars/app_log/goim/comet centos:7.9.2009 /bin/bash /usr/local/app/tars/tarsnode/util/execute.sh
+
+
+exec user process caused: exec format error

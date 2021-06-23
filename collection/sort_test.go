@@ -8,6 +8,7 @@ import (
 	"sort"
 	"strings"
 	"testing"
+	"time"
 )
 
 func TestSort(t *testing.T) {
@@ -100,4 +101,10 @@ func TestJson(t *testing.T) {
 		str = str + fmt.Sprintf("%s=__%s__&", strings.ToLower(v.Key), v.Key)
 	}
 	fmt.Println(str)
+}
+
+func TestData2(t *testing.T) {
+	fmt.Println(time.Now().Unix())
+	fmt.Println(time.Now().AddDate(0, -3, 0).Unix())
+	fmt.Println(time.Now().UnixNano() / 1000000)
 }

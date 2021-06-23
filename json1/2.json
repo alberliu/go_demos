@@ -1,18 +1,10 @@
 {
-  "account_id": "<your_account_id>",
-  "user_action_set_id": "<your_user_action_set_id>",
-  "actions": [
-    {
-      "external_action_id": "f9efca36a3c30e1cf28170d86ecbf5e9_complete_order_1492991000_< ACCOUNT_ID>_< USER_ACTION_SET_ID>",
-      "action_time": 1492991000,
-      "user_id": {
-        "hash_imei": "f9efca36a3c30e1cf28170d86ecbf5e9",
-        "oaid": "fd79ed7f-6a7b-3b16-edd0-b754cc6d4420"
-      },
-      "action_type": "COMPLETE_ORDER",
-      "trace": {
-        "click_id": "<CLICK_ID>"
-      }
-    }
-  ]
+  "act": "server_customize_event",
+  "app_id": 10008,
+  "event_id": "alber_test",
+  "time": 1624433106,
+  "params": {
+    "desc": "这是一个测试数据",
+    "name": "hello,国豪"
+  }
 }

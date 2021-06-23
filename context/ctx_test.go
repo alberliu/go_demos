@@ -53,8 +53,7 @@ func TestInterFace(t *testing.T) {
 }
 
 func TestCase(t *testing.T) {
-	var a []int64
-	for {
-		a = append(a, 1)
-	}
+	var userId = 290902
+	key := (2 << 48) | userId
+	fmt.Println(key)
 }
