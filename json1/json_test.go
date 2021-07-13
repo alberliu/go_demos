@@ -4,7 +4,9 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/astaxie/beego/httplib"
+	"math/rand"
 	"strconv"
+	"strings"
 	"testing"
 	"time"
 )
@@ -31,4 +33,59 @@ func TestJson(t *testing.T) {
 		"name": "hello,国豪",
 		"desc": "这是一个测试数据",
 	})
+}
+
+func a() []int {
+	return nil
+}
+
+func b() []int {
+	return []int{}
+}
+
+func TestNil(t *testing.T) {
+	var userId int64 = 57827402
+	userId = (int64(2) << 48) | userId
+	fmt.Println(userId)
+
+	fmt.Println(562951561014314 - (int64(2) << 48))
+}
+
+func Decode(key string) (userId int64, seq int64, err error) {
+	var (
+		idx int
+		t   int64
+	)
+	if idx = strings.IndexByte(key, '_'); idx == -1 {
+		return
+	}
+	if userId, err = strconv.ParseInt(key[:idx], 10, 64); err != nil {
+		return
+	}
+	if t, err = strconv.ParseInt(key[idx+1:], 10, 64); err != nil {
+		return
+	}
+	seq = t
+	return
+}
+
+func TestUn(t *testing.T) {
+	fmt.Println(562949954090114 | 1)
+
+}
+
+func TestRand(t *testing.T) {
+	fmt.Println(rand.Int63n(5))
+	fmt.Println(rand.Int63n(5))
+	fmt.Println(rand.Int63n(5))
+	fmt.Println(rand.Int63n(5))
+	fmt.Println(rand.Int63n(5))
+	fmt.Println(rand.Int63n(5))
+	fmt.Println(rand.Int63n(5))
+	fmt.Println(rand.Int63n(5))
+	fmt.Println(rand.Int63n(5))
+	fmt.Println(rand.Int63n(5))
+	fmt.Println(rand.Int63n(5))
+	fmt.Println(rand.Int63n(5))
+	fmt.Println(rand.Int63n(5))
 }

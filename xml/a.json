@@ -1,29 +1,27 @@
-{
-  "Id":1,
-  "Interface": [
-      {
-        "From_Account": "144115197276518801",
-        "IsPlaceMsg": 0,
-        "MsgBody": [
-          {
-            "MsgContent": {
-              "Data": "\b\u0001\u0010\u0006\u001A\u0006猫瞳",
-              "Desc": "MIF",
-              "Ext": ""
-            },
-            "MsgType": "TIMCustomElem"
-          },
-          {
-            "MsgContent": {
-              "Data": "",
-              "Index": 15
-            },
-            "MsgType": "TIMFaceElem"
-          }
-        ],
-        "MsgRandom": 51083293,
-        "MsgSeq": 7803321,
-        "MsgTimeStamp": 1458721802
-      }
-    ]
-}
+time:2021-07-13 22:14:58
+env:<font color="comment"></font>
+server:yunaudio.room.RoomExtObj
+function:sendChat
+ip:192.168.1.170
+panic:runtime error: invalid memory address or nil pointer dereference
+stack:goroutine 229113661 [running]:
+code.com/tars/goframework/tars/servant.getStackInfo(0xc03385d88a62ec0a, 0x68b1ae2dd833)
+/Users/admin/dianyun/yungame/yuyin/pkg/code.com/tars/goframework/tars/servant/jceprotocol.go:77 +0x6f
+code.com/tars/goframework/tars/servant.(*JceProtocol).doDispatch.func1(0xc009f4bb60, 0xc00f2af730)
+/Users/admin/dianyun/yungame/yuyin/pkg/code.com/tars/goframework/tars/servant/jceprotocol.go:58 +0xfe
+panic(0x14e6300, 0x2667d40)
+/usr/local/go/src/runtime/panic.go:969 +0x1b9
+yuyin/internal/room/handler.Chat(0x1aa7960, 0xc00ead0d20, 0xc0054bb4c0, 0xc0054bb500, 0x1, 0x1)
+/Users/admin/dianyun/yungame/yuyin/internal/room/handler/chat.go:129 +0x1357
+yuyin/internal/room/handler.(*RoomExtObj).SendChat(0x26b1dc8, 0x1aa7960, 0xc00ead0d20, 0xc0054bb4c0, 0xc0054bb4c0, 0x0, 0x0)
+/Users/admin/dianyun/yungame/yuyin/internal/room/handler/room_ext_obj.go:191 +0x185
+yuyin/util/protocol/pb.(*roomExtObjDispatcher).Dispatch(0x26b1dc8, 0x1aa7960, 0xc00ead0d20, 0x18855a0, 0x26b1dc8, 0xc009f4bb60, 0x1aa7960, 0xc00ead0d20, 0xc00d603060)
+/Users/admin/dianyun/yungame/yuyin/util/protocol/pb/room.ext.pb.go:21988 +0xa7c
+code.com/tars/goframework/tars/servant.(*JceProtocol).doDispatch(0xc0005b4b60, 0x1aa7920, 0xc009f4bb00, 0xc009f4bb60, 0x0, 0x0, 0x0)
+/Users/admin/dianyun/yungame/yuyin/pkg/code.com/tars/goframework/tars/servant/jceprotocol.go:70 +0x30b
+code.com/tars/goframework/tars/servant.(*JceProtocol).Invoke(0xc0005b4b60, 0x1aa7920, 0xc009f4bb00, 0xc006569c00, 0x34a, 0x34a, 0x0, 0x0, 0x0, 0x0, ...)
+/Users/admin/dianyun/yungame/yuyin/pkg/code.com/tars/goframework/tars/servant/jceprotocol.go:106 +0x1145
+code.com/tars/goframework/tars/tarsserver.(*ConnectHander).invoke.func2(0xc00b4c0ba0, 0x1aa7920, 0xc009f4bb00, 0xc006569c00, 0x34a, 0x34a, 0xc009f4b9e0)
+/Users/admin/dianyun/yungame/yuyin/pkg/code.com/tars/goframework/tars/tarsserver/handler.go:200 +0xa2
+created by code.com/tars/goframework/tars/tarsserver.(*ConnectHander).invoke
+/Users/admin/dianyun/yungame/yuyin/pkg/code.com/tars/goframework/tars/tarsserver/handler.go:199 +0x1c5
